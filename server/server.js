@@ -3,12 +3,16 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import router from './routes/testRoute.js';
 import petRoute from './routes/petRoute.js';
+import connectDB from './config/db.js';
+
+
 dotenv.config();
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+connectDB();
 
 // Test Route
 app.use('/api', router);
