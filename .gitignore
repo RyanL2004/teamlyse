@@ -30,3 +30,28 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# Flask debug log
+flask.log
+
+# Byte-compiled Python files
+*.pyc
+
+# Temporary files
+*.tmp
+*.log
+
+# Model files (if you download or store large models locally)
+models/
+*.pt
+*.onnx
