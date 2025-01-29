@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Load the Whisper Model
 model = whisper.load_model("base")
-summarizer = pipeline("summarization", model = "t5-small")
+summarizer = pipeline("summarization", model = "Salesforce/bart-large-xsum-samsum")
 
 def chunk_text(text,chunk_size=512):
     """Splits large transcriptions into smaller chunks for summarization."""
@@ -65,9 +65,11 @@ def summarize():
     text = request.json['text']
 
     try:
-        #Summarize long texts efficiently
+        #Chunk large transcriptions
         text_chunks = chunk_text(text)
-        summaries = [summarizer(chunk, max_length=200, min_length=50, do_sample=False)[0]['summary_text'] for chunk in text_chunks]
+
+        #Generate structured summaries for each chunk 
+        summaries = [summarizer(chunk, max_length=200, min_length=100, do_sample=False)[0]['summary_text'] for chunk in text_chunks]
         final_summary = " ".join(summaries)
 
         return jsonify({
