@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Load the Whisper Model
 model = whisper.load_model("base")
-summarizer = pipeline("summarization", model = "Salesforce/bart-large-xsum-samsum")
+summarizer = pipeline("summarization", model = "facebook/bart-large-cnn")
 
 def chunk_text(text,chunk_size=512):
     """Splits large transcriptions into smaller chunks for summarization."""
@@ -44,7 +44,7 @@ def transcribe():
 
         #Summarise large trasncriptions in chunks
         text_chunks = chunk_text(transcription_text)
-        summaries = [summarizer(chunk, max_length=200, min_length=60, do_sample=False)[0]['summary_text'] for chunk in text_chunks]
+        summaries = [summarizer(chunk, max_length=200, min_length=100, do_sample=False)[0]['summary_text'] for chunk in text_chunks]
         #Combine summaries
         final_summary = " ".join(summaries)
 
@@ -70,7 +70,7 @@ def summarize():
 
         #Generate structured summaries for each chunk 
         summaries = [summarizer(chunk, max_length=200, min_length=100, do_sample=False)[0]['summary_text'] for chunk in text_chunks]
-        final_summary = " ".join(summaries)
+        final_summary = "\n- ".join(summaries)
 
         return jsonify({
             "summary": final_summary})
