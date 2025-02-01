@@ -1,12 +1,3 @@
-# React + Vite 
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
 **AI Meeting Companion Project: Comprehensive Documentation**
 
 ---
@@ -193,3 +184,13 @@ To create an AI-powered assistant that simplifies meetings by offering live tran
 ### **9. Conclusion**
 The AI Meeting Companion is an innovative tool that redefines virtual meetings by combining advanced AI technologies, real-time communication, and engaging visuals. By leveraging OpenAI Whisper, DeepThink, and customizable 3D avatars, this project aims to deliver an unparalleled meeting experience that boosts productivity and engagement for teams worldwide.
 
+---
+
+# React + Vite 
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
