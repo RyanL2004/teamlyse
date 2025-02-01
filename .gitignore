@@ -55,3 +55,8 @@ flask.log
 models/
 *.pt
 *.onnx
+
+# AI model ignored 
+ai-backend/model-training/fine_tuned_model/
+ai-backend/model-training/fine_tuned_model/*
+ai-backend/model-training/fine_tuned_model/**/*.safetensors
