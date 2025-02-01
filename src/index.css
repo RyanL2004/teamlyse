@@ -1,8 +1,9 @@
+@import "animate.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import "animate.css";
+
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
