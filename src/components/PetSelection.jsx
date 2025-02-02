@@ -3,22 +3,22 @@ import React, { useState} from 'react';
 const pets = [
     {
         id: 1,
-        name: 'Fox',
-        image: 'assets/gifs/fox.gif',
+        name: 'Lethal',
+        image: 'assets/gifs/lethal-company-dance.gif',
     },
     {
         id: 2,
-        name: 'Cat',
-        image: 'assets/gifs/fox.gif'
+        name: 'Rick',
+        image: 'assets/gifs/rick.gif'
     },
     {
         id:3,
-        name: 'Rabbit',
-        image: 'assets/gifs/fox.gif',
+        name: 'Rem',
+        image: 'assets/gifs/rem-re-zero.gif',
     },
     {
         id:4,
-        name: 'Kangaroo',
+        name: 'Fox',
         image: 'assets/gifs/fox.gif'
     }
 ]
