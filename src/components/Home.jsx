@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Features from "../pages/Features";
+import HomeFeatures from "../pages/HomeFeatures";
 const Home = () => {
   return (
     <>
@@ -58,7 +58,7 @@ const Home = () => {
           </Link>
         </div>
       </header>
-      <Features></Features>
+      <HomeFeatures></HomeFeatures>
     </>
   );
 };
