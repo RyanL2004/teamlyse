@@ -51,7 +51,7 @@ const Home = () => {
             Customize the look of your meeting companion! 🎨
           </p>
           <Link
-            to="/petselection"
+            to="/live-compagnion"
             className="mt-2 text-blue-400 hover:underline text-lg"
           >
             Choose Your AI Pet →
