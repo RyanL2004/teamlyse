@@ -8,26 +8,30 @@ import {
   FaPaw,
   FaBars,
   FaTimes,
+  FaPlusCircle,
+  FaUserCircle,
   FaCalendarAlt,
 } from "react-icons/fa";
 
 const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const location = useLocation(); // Detect current route for active state
+  const location = useLocation(); // Detect active page
 
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: <FaHome /> },
     { to: "/live-meeting", label: "Live Meeting", icon: <FaRobot /> },
-    { to: "/upcoming-meetings", label: "Upcoming Meetings", icon: <FaCalendarAlt /> },
+    {
+      to: "/upcoming-meetings",
+      label: "Upcoming Meetings",
+      icon: <FaCalendarAlt />,
+    },
     { to: "/meetings-history", label: "Meetings History", icon: <FaHistory /> },
     { to: "/live-companion", label: "Live Companion", icon: <FaPaw /> },
   ];
 
   return (
     <motion.aside
-      animate={{ width: isSidebarOpen ? 250 : 80 }}
-      className={`bg-gray-900 h-screen p-4 flex flex-col fixed left-0 top-0 transition-all z-50 ${
-        isSidebarOpen ? "w-64" : "w-20"
-      }`}
+      animate={{ width: isSidebarOpen ? 260 : 85 }}
+      className={`bg-gray-900 h-screen p-4 flex flex-col fixed left-0 top-0 transition-all border-r border-gray-700`}
     >
       {/* Sidebar Toggle Button */}
       <button
@@ -37,8 +41,19 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         {isSidebarOpen ? <FaTimes /> : <FaBars />}
       </button>
 
+      {/* "New Meeting" Button (ChatGPT Style) */}
+      <div className="mt-6">
+        <Link
+          to="/live-meeting"
+          className="flex items-center space-x-3 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition justify-center"
+        >
+          <FaPlusCircle className="text-xl" />
+          {isSidebarOpen && <span className="font-semibold">New Meeting</span>}
+        </Link>
+      </div>
+
       {/* Navigation Links */}
-      <nav className="mt-10 flex flex-col space-y-4">
+      <nav className="mt-6 flex flex-col space-y-4">
         {navLinks.map((link, index) => (
           <Link
             key={index}
@@ -55,11 +70,16 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         ))}
       </nav>
 
-      {/* Tooltip for Collapsed Sidebar */}
-      {!isSidebarOpen && (
-        <div className="absolute left-[90px] text-xs text-gray-400">
-        </div>
-      )}
+      {/* User Profile Section */}
+      <div className="mt-auto flex items-center space-x-3 p-3 rounded-lg bg-gray-800 text-white">
+        <FaUserCircle className="text-3xl" />
+        {isSidebarOpen && (
+          <div>
+            <p className="text-sm font-semibold">John Doe</p>
+            <p className="text-xs text-gray-400">johndoe@example.com</p>
+          </div>
+        )}
+      </div>
     </motion.aside>
   );
 };
