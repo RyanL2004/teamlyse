@@ -60,7 +60,7 @@ const Pricing = () => {
 
   return (
     <>
-      <div className="relative isolate bg-[#121212] px-6 py-24 sm:py-32 lg:px-8 text-white">
+      <div className="relative isolate bg-neutral-950 px-6 py-24 sm:py-32 lg:px-8 text-white">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-base font-semibold text-blue-400">Pricing Plans</h2>
           <p className="mt-2 text-5xl font-semibold tracking-tight">
@@ -110,11 +110,11 @@ const Pricing = () => {
               key={tier.id}
               className={classNames(
                 tier.featured
-                  ? "relative bg-gradient-to-r from-yellow-500 to-yellow-300 shadow-2xl text-white"
+                  ? "relative bg-gradient-to-r from-yellow-400 to-yellow-500 to-yellow-600 shadow-2xl text-white"
                   : "bg-gray-800 sm:mx-8 lg:mx-0",
                 tier.name === "Pro"
-                  ? "bg-gradient-to-br from-gray-800 to-gray-600 shadow-xl"
-                  : "",
+                  ? "bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 shadow-xl"
+                  : "bg-neutral-950 text-white hover:bg-black hover:shadow-lg hover:shadow-blue-500/50",
                 "rounded-3xl p-8 ring-1 ring-gray-700 sm:p-10 transition-transform hover:scale-105"
               )}
             >
@@ -130,7 +130,7 @@ const Pricing = () => {
                 )}
               </p>
               {(billingCycle !== "monthly" && tier.name !== "Starter") && (
-                <p className="text-yellow-300 font-semibold mt-2">Save 2 Months!</p>
+                <p className="text-yellow-600 font-semibold mt-2">Save 2 Months!</p>
               )}
               
               
@@ -150,8 +150,8 @@ const Pricing = () => {
                 aria-describedby={tier.id}
                 className={classNames(
                   tier.featured
-                    ? "bg-white text-yellow-600 shadow-md hover:bg-gray-200 hover:text-yellow-600 shadow-md"
-                    : "bg-gray-700 text-white hover:bg-gray-600 hover:text-white",
+                    ? "bg-gradient-to-r from-yellow-500 to-yellow-700 text-white font-bold hover:shadow-lg hover:shadow-yellow-500/50"
+                    : "bg-gray-900 text-white hover:bg-black hover:shadow-lg hover:shadow-blue-500/50",
                   "mt-8 block rounded-md px-5 py-3 text-center text-lg font-semibold transition-all sm:mt-10"
                 )}
               >
