@@ -31,12 +31,12 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <motion.aside
       animate={{ width: isSidebarOpen ? 275 : 77 }}
-      className="bg-gray-900 h-screen p-4 flex flex-col fixed left-0 top-0 transition-all border-r border-gray-700"
+      className="bg-neutral-950 h-screen p-4 flex flex-col fixed left-0 top-0 transition-all "
     >
       {/* Sidebar Toggle Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition self-end"
+        className="p-2 rounded-lg bg-gray-500 hover:bg-gray-500 transition self-end"
       >
         {isSidebarOpen ? <FaTimes /> : <FaBars />}
       </button>
@@ -45,7 +45,7 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       <div className="mt-6">
         <Link
           to="/live-meeting"
-          className="flex items-center space-x-3 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition justify-center"
+          className="flex items-center space-x-3 p-3 bg-gray-800 hover:bg-gray-800 text-white rounded-lg shadow-md transition justify-center"
           onClick={() => setIsSidebarOpen(true)} // Reset sidebar on navigation
         >
           <FaPlusCircle className="text-xl" />
@@ -61,8 +61,8 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
             to={link.to}
             className={`flex items-center space-x-3 p-3 rounded-lg transition ${
               location.pathname === link.to
-                ? "bg-blue-600 text-white"
-                : "hover:bg-gray-800 text-gray-300"
+                ? "bg-gray-800 text-white"
+                : "hover:bg-gray-800 text-white"
             }`}
             onClick={() => setIsSidebarOpen(true)} // Reset sidebar on navigation
           >

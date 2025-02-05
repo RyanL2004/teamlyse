@@ -4,7 +4,7 @@ import HomeFeatures from "../pages/HomeFeatures";
 const Home = () => {
   return (
     <>
-      <header className="flex flex-col items-center justify-center text-center py-20 bg-[#121212] text-white">
+      <header className="flex flex-col items-center justify-center text-center py-20 bg-neutral-950 text-white">
         {/* Logo / Branding */}
         <h1 className="text-5xl font-bold mb-4">
           Meet<span className="text-gray-400">Pet</span>

@@ -4,7 +4,7 @@ import { faEnvelope, faGlobe } from "@fortawesome/free-solid-svg-icons";
 
 const Footer = () => {
     return (
-      <footer className="bg-[#121212] text-gray-400">
+      <footer className="bg-neutral-950 text-gray-400">
         <div className="max-w-screen-xl mx-auto p-6 lg:py-8">
           
           {/* Top Section */}

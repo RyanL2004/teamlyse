@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Features = () => {
   return (
-    <section className="py-20 bg-[#121212] text-white">
+    <section className="py-20 bg-neutral-950 text-white">
       <div className="max-w-6xl mx-auto text-center">
         {/* Section Title */}
         <motion.h2 

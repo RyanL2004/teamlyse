@@ -7,7 +7,7 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="flex bg-[#121212] text-white min-h-screen">
+    <div className="flex bg-neutral-950 text-white min-h-screen">
       {/* Sidebar Component */}
       <DashboardSideBar
         isSidebarOpen={isSidebarOpen}
@@ -70,7 +70,8 @@ const Dashboard = () => {
             </div>
           </Link>
         </div>
-        {/* Recent Meeting Summaries */}
+
+        {/* Recent Meeting Summaries 
         <div className="mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold">Recent Meetings</h2>
           <ul className="mt-4 space-y-3">
@@ -88,6 +89,7 @@ const Dashboard = () => {
             </li>
           </ul>
         </div>
+        */}
       </main>
     </div>
   );
