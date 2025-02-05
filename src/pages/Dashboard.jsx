@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaBars, FaTimes } from "react-icons/fa";
 import DashboardSideBar from "./DashboardSideBar";
 
 const Dashboard = () => {
@@ -9,16 +9,29 @@ const Dashboard = () => {
   return (
     <div className="flex bg-[#121212] text-white min-h-screen">
       {/* Sidebar Component */}
-      <DashboardSideBar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+      <DashboardSideBar
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
 
-      {/* Main Content Adjusts Based on Sidebar */}
+      {/* Main Content */}
       <main
         className={`flex-1 p-8 transition-all ${
           isSidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
+        {/* Sidebar Toggle Button at the Top Right */}
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="absolute top-4 right-4 bg-gray-800 hover:bg-gray-700 p-2 rounded-lg transition-all"
+        >
+          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
         <h1 className="text-3xl font-bold">Welcome Back, User!</h1>
-        <p className="text-gray-400 mt-2">Your AI Meeting Companion is ready.</p>
+        <p className="text-gray-400 mt-2">
+          Your AI Meeting Companion is ready.
+        </p>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -28,7 +41,9 @@ const Dashboard = () => {
           >
             <div>
               <h3 className="text-xl font-semibold">Start AI Meeting</h3>
-              <p className="text-gray-200 text-sm">Let AI assist you in real time.</p>
+              <p className="text-gray-200 text-sm">
+                Let AI assist you in real time.
+              </p>
             </div>
             <FaPlusCircle className="text-3xl" />
           </Link>
@@ -39,7 +54,9 @@ const Dashboard = () => {
           >
             <div>
               <h3 className="text-xl font-semibold">View Past Meetings</h3>
-              <p className="text-gray-200 text-sm">Check AI-generated summaries.</p>
+              <p className="text-gray-200 text-sm">
+                Check AI-generated summaries.
+              </p>
             </div>
           </Link>
 
@@ -53,7 +70,6 @@ const Dashboard = () => {
             </div>
           </Link>
         </div>
-
         {/* Recent Meeting Summaries */}
         <div className="mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold">Recent Meetings</h2>
