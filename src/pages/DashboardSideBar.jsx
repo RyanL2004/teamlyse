@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -14,7 +14,7 @@ import {
 } from "react-icons/fa";
 
 const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const location = useLocation(); // Detect active page
+  const location = useLocation(); // Detect current route
 
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: <FaHome /> },
@@ -30,8 +30,8 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
   return (
     <motion.aside
-      animate={{ width: isSidebarOpen ? 260 : 85 }}
-      className={`bg-gray-900 h-screen p-4 flex flex-col fixed left-0 top-0 transition-all border-r border-gray-700`}
+      animate={{ width: isSidebarOpen ? 275 : 77 }}
+      className="bg-gray-900 h-screen p-4 flex flex-col fixed left-0 top-0 transition-all border-r border-gray-700"
     >
       {/* Sidebar Toggle Button */}
       <button
@@ -46,6 +46,7 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
         <Link
           to="/live-meeting"
           className="flex items-center space-x-3 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition justify-center"
+          onClick={() => setIsSidebarOpen(true)} // Reset sidebar on navigation
         >
           <FaPlusCircle className="text-xl" />
           {isSidebarOpen && <span className="font-semibold">New Meeting</span>}
@@ -63,6 +64,7 @@ const DashboardSideBar = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 ? "bg-blue-600 text-white"
                 : "hover:bg-gray-800 text-gray-300"
             }`}
+            onClick={() => setIsSidebarOpen(true)} // Reset sidebar on navigation
           >
             <div className="text-xl">{link.icon}</div>
             {isSidebarOpen && <span>{link.label}</span>}
