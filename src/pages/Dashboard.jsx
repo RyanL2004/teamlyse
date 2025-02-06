@@ -6,8 +6,8 @@ import DashboardSideBar from "./DashboardSideBar";
 
 // Dashboard Animation
 const dashboardVariants = {
-  open: { marginLeft: "260px", transition: { duration: 0.3 } },
-  closed: { marginLeft: "80px", transition: { duration: 0.3 } },
+  open: { marginLeft: "260px", opacity: 1, transition: { duration: 0.3 } },
+  closed: { marginLeft: "80px", opacity: 0.8, transition: { duration: 0.3 } },
 };
 
 const Dashboard = () => {

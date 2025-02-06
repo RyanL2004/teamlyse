@@ -1,18 +1,17 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSidebar } from "../context/SidebarContext"; // Sidebar Context
 import { LayoutDashboard, Video, CalendarCheck2, History, Bot, Menu } from "lucide-react";
 
 // Sidebar animation variants
 const sidebarVariants = {
   open: { width: 260, opacity: 1, transition: { duration: 0.3 } },
-  closed: { width: 80, opacity: 1, transition: { duration: 0.3 } },
+  closed: { width: 80, opacity: 0.9, transition: { duration: 0.3 } },
 };
 
 // Navigation item animation
 const navItemVariants = {
-  open: { opacity: 1, x: 0, transition: { duration: 0.2 } },
+  open: { opacity: 1, x: 0, transition: { duration: 0.3, delay: 0.1 } },
   closed: { opacity: 0, x: -20, transition: { duration: 0.2 } },
 };
 
@@ -42,21 +41,25 @@ const DashboardSideBar = () => {
         <Menu size={22} />
       </motion.button>
 
-      {/* Navigation Links */}
+      {/* Navigation Links with AnimatePresence for Smooth Exit */}
       <nav className="mt-6 flex flex-col space-y-3">
-        {navLinks.map((link, index) => (
-          <motion.div
-            key={index}
-            className={`flex items-center space-x-3 p-3 rounded-lg transition ${
-              isSidebarOpen ? "justify-start" : "justify-center"
-            } hover:bg-gray-800 text-gray-300 cursor-pointer`}
-            variants={navItemVariants}
-            animate={isSidebarOpen ? "open" : "closed"}
-          >
-            <link.icon size={22} />
-            {isSidebarOpen && <span>{link.label}</span>}
-          </motion.div>
-        ))}
+        <AnimatePresence>
+          {navLinks.map((link, index) => (
+            <motion.div
+              key={index}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition ${
+                isSidebarOpen ? "justify-start" : "justify-center"
+              } hover:bg-gray-800 text-gray-300 cursor-pointer`}
+              variants={navItemVariants}
+              initial="closed"
+              animate={isSidebarOpen ? "open" : "closed"}
+              exit="closed"
+            >
+              <link.icon size={22} />
+              {isSidebarOpen && <span>{link.label}</span>}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </nav>
     </motion.aside>
   );
