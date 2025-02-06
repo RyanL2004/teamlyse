@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DashboardSideBar from './DashboardSideBar'
+
 const UpcomingMeetings = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   return (
-    <div className = "flex h-screen bg-[#121212] text-white">
-      <DashboardSideBar />
+    <div className = "flex h-screen bg-neutral-950 text-white">
+      <DashboardSideBar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}/>
 
     </div>
   )
