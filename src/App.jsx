@@ -33,9 +33,9 @@ function App() {
       <SidebarProvider>
       <Routes>
       <Route exact path="/dashboard" element={<Dashboard />}></Route>
-      <Route exact path="live-meeting" element={<LiveMeeting />}></Route>
-      <Route exact path="upcoming-meetings" element={<UpcomingMeetings />}></Route>
-      <Route exact path="meetings-history" element={<MeetingsHistory />}></Route>
+      <Route exact path="/live-meeting" element={<LiveMeeting />}></Route>
+      <Route exact path="/upcoming-meetings" element={<UpcomingMeetings />}></Route>
+      <Route exact path="/meetings-history" element={<MeetingsHistory />}></Route>
       <Route exact path="/live-companion" element={<LiveCompanion />}></Route>
       </Routes>
       </SidebarProvider>

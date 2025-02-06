@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link, useLocation } from "react-router-dom"; // Import for navigation
 import { useSidebar } from "../context/SidebarContext"; // Sidebar Context
 import { LayoutDashboard, Video, CalendarCheck2, History, Bot, Menu } from "lucide-react";
 
@@ -17,6 +18,7 @@ const navItemVariants = {
 
 const DashboardSideBar = () => {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebar(); // Sidebar state
+  const location = useLocation(); // Get current route
 
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -45,19 +47,20 @@ const DashboardSideBar = () => {
       <nav className="mt-6 flex flex-col space-y-3">
         <AnimatePresence>
           {navLinks.map((link, index) => (
-            <motion.div
+            <Link
               key={index}
+              to={link.to}
               className={`flex items-center space-x-3 p-3 rounded-lg transition ${
-                isSidebarOpen ? "justify-start" : "justify-center"
-              } hover:bg-gray-800 text-gray-300 cursor-pointer`}
-              variants={navItemVariants}
-              initial="closed"
-              animate={isSidebarOpen ? "open" : "closed"}
-              exit="closed"
+                location.pathname === link.to ? "bg-blue-600 text-white" : "hover:bg-gray-800 text-white hover:text-white"
+              } cursor-pointer`}
             >
               <link.icon size={22} />
-              {isSidebarOpen && <span>{link.label}</span>}
-            </motion.div>
+              {isSidebarOpen && (
+                <motion.span variants={navItemVariants} initial="closed" animate="open">
+                  {link.label}
+                </motion.span>
+              )}
+            </Link>
           ))}
         </AnimatePresence>
       </nav>
