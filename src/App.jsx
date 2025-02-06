@@ -16,27 +16,30 @@ import Pricing from "./pages/Pricing";
 import MeetingsHistory from "./pages/MeetingsHistory";
 import LiveMeeting from "./pages/LiveMeeting";
 import UpcomingMeetings from "./pages/UpcomingMeetings";
+import { SidebarProvider } from "./context/SidebarContext";
 function App() {
   const [selectedPet, setSelectedPet] = useState(null);
 
   return (
     <div>
-      <Layouts>
+      
       <Routes>
-        <Route exact path="/" element={<Home />}></Route>
-        <Route exact path="/signin" element={<SignIn />}></Route>
-        <Route exact path="/signup" element={<SignUp />}></Route>
-        <Route exact path="/live-companion" element={<LiveCompanion />}></Route>
-        <Route exact path="/features" element={<Features />}></Route>
-        <Route exact path="/dashboard" element={<Dashboard />}></Route>
-        <Route exact path="/pricing" element={<Pricing />}></Route>
-        <Route exact path="live-meeting" element={<LiveMeeting />}></Route>
-        <Route exact path="upcoming-meetings" element={<UpcomingMeetings />}></Route>
-        <Route exact path="meetings-history" element={<MeetingsHistory />}></Route>
-        
-
+      <Route exact path="/" element={<Layouts><Home /></Layouts>} />
+      <Route exact path="/features" element={<Layouts><Features /></Layouts>} />
+      <Route exact path="/pricing" element={<Layouts><Pricing /></Layouts>} />
+      <Route exact path="/signin" element={<Layouts><SignIn /></Layouts>} />
+      <Route exact path="/signup" element={<Layouts><SignUp /></Layouts>} />
       </Routes>
-      </Layouts>
+      <SidebarProvider>
+      <Routes>
+      <Route exact path="/dashboard" element={<Dashboard />}></Route>
+      <Route exact path="live-meeting" element={<LiveMeeting />}></Route>
+      <Route exact path="upcoming-meetings" element={<UpcomingMeetings />}></Route>
+      <Route exact path="meetings-history" element={<MeetingsHistory />}></Route>
+      <Route exact path="/live-companion" element={<LiveCompanion />}></Route>
+      </Routes>
+      </SidebarProvider>
+      
 
       {/*
       <PetSelection onSelectPet={setSelectedPet} />
