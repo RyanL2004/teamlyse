@@ -52,7 +52,6 @@ flask.log
 *.log
 
 # Model files (if you download or store large models locally)
-models/
 *.pt
 *.onnx
 

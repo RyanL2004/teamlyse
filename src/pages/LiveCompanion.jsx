@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import DashboardSideBar from "./DashboardSideBar";
@@ -7,18 +7,30 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 
-const pets = [
-  { name: "Fox", model: "/assets/gifs/lethal-company-dance.gif" },
-  { name: "Owl", model: "/assets/gifs/lethal-company-dance.gif" },
-  { name: "Cat", model: "/assets/gifs/lethal-company-dance.gif" },
-  { name: "Rabbit", model: "/assets/gifs/lethal-company-dance.gif" },
-  { name: "Baby Kangaroo", model: "/assets/gifs/lethal-company-dance.gif" },
-];
-
 const LiveCompanion = ({ onSelectPet }) => {
+  const [pets, setPets] = useState([]); // Fetch pets dynamically
   const [selectedPet, setSelectedPet] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const swiperRef = useRef(null);
+
+  // Fetch pets from the backend when component loads
+  useEffect(() => {
+    fetch("/api/pets/all")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error: ${res.status}`); // ✅ Fixed string interpolation
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("✅ Pets fetched successfully:", data);
+        setPets(data);
+      })
+      .catch((error) => console.error("❌ Error fetching pets:", error.message));
+  }, []);  // ✅ Proper dependency array
+  
+
+      
 
   const handleSelect = () => {
     if (swiperRef.current) {
@@ -39,28 +51,32 @@ const LiveCompanion = ({ onSelectPet }) => {
         isSidebarOpen ? "ml-64" : "ml-20"
       }`}>
         {/* Swiper Carousel for Pet Selection */}
-        <Swiper
-          ref={swiperRef}
-          modules={[Navigation]}
-          grabCursor={true}
-          centeredSlides={true}
-          slidesPerView={3}
-          navigation
-          className="w-full max-w-4xl"
-        >
-          {pets.map((pet, index) => (
-            <SwiperSlide key={index} className="flex justify-center items-center">
-              <motion.img
-                src={pet.model}
-                alt={pet.name}
-                className="w-64 h-auto rounded-lg shadow-lg"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {pets.length > 0 ? (
+          <Swiper
+            ref={swiperRef}
+            modules={[Navigation]}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={3}
+            navigation
+            className="w-full max-w-4xl"
+          >
+            {pets.map((pet, index) => (
+              <SwiperSlide key={pet._id} className="flex justify-center items-center">
+                <motion.img
+                  src={pet.image}
+                  alt={pet.name}
+                  className="w-64 h-auto rounded-lg shadow-lg"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <p>Loading pets...</p>
+        )}
 
         {/* Navigation Buttons */}
         <div className="flex items-center gap-6 mt-4">
