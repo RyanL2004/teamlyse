@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import router from './routes/testRoute.js';
 import petRoute from './routes/petRoute.js';
 import connectDB from './config/db.js';
 
