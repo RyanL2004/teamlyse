@@ -1,18 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import gsap from "gsap";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import DashboardSideBar from "./DashboardSideBar";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import "swiper/css/autoplay";
-
-
 
 const pets = [
   { name: "Fox", model: "/assets/gifs/lethal-company-dance.gif" },
@@ -24,6 +17,7 @@ const pets = [
 
 const LiveCompanion = ({ onSelectPet }) => {
   const [selectedPet, setSelectedPet] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const swiperRef = useRef(null);
 
   const handleSelect = () => {
@@ -36,11 +30,17 @@ const LiveCompanion = ({ onSelectPet }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-r bg-neutral-950 text-white relative overflow-hidden">
-      <DashboardSideBar className="fixed left-0 top-0 h-full z-10" />
-      <main className="flex-1 flex flex-col items-center justify-center p-4 relative">
+    <div className="flex h-screen bg-neutral-950 text-white">
+      {/* Sidebar with state toggle */}
+      <DashboardSideBar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+
+      {/* Main Content */}
+      <main className={`flex-1 flex flex-col items-center justify-center p-4 transition-all duration-300 ${
+        isSidebarOpen ? "ml-64" : "ml-20"
+      }`}>
         {/* Swiper Carousel for Pet Selection */}
         <Swiper
+          ref={swiperRef}
           modules={[Navigation]}
           grabCursor={true}
           centeredSlides={true}
@@ -49,10 +49,7 @@ const LiveCompanion = ({ onSelectPet }) => {
           className="w-full max-w-4xl"
         >
           {pets.map((pet, index) => (
-            <SwiperSlide
-              key={index}
-              className="flex justify-center items-center"
-            >
+            <SwiperSlide key={index} className="flex justify-center items-center">
               <motion.img
                 src={pet.model}
                 alt={pet.name}
@@ -65,6 +62,7 @@ const LiveCompanion = ({ onSelectPet }) => {
           ))}
         </Swiper>
 
+        {/* Navigation Buttons */}
         <div className="flex items-center gap-6 mt-4">
           <button
             className="p-4 bg-gray-800 rounded-full hover:bg-gray-700 transition transform hover:scale-110"
@@ -88,6 +86,7 @@ const LiveCompanion = ({ onSelectPet }) => {
           </button>
         </div>
 
+        {/* Confirm Selection Button */}
         <motion.button
           onClick={handleSelect}
           whileHover={{ scale: 1.1 }}
@@ -97,6 +96,7 @@ const LiveCompanion = ({ onSelectPet }) => {
           Confirm Selection
         </motion.button>
 
+        {/* Selected Pet Confirmation */}
         {selectedPet && (
           <motion.p
             initial={{ opacity: 0 }}
