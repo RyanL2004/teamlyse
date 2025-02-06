@@ -13,8 +13,7 @@ app.use(cors());
 app.use(express.json());
 connectDB();
 
-// Test Route
-app.use('/api', router);
+
 // Pet Route
 app.use('/api/pets', petRoute);
 
