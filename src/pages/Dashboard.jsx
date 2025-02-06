@@ -7,31 +7,25 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="flex bg-neutral-950 text-white min-h-screen">
+    <div className="flex bg-neutral-950 text-white min-h-screen relative">
       {/* Sidebar Component */}
       <DashboardSideBar
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
 
-      {/* Main Content */}
+      {/* Main Content Adjusting with Sidebar */}
       <main
-        className={`flex-1 p-8 transition-all ${
-          isSidebarOpen ? "ml-64" : "ml-20"
+        className={`flex-1 p-8 transition-all duration-300 ${
+          isSidebarOpen ? "ml-[260px]" : "ml-[80px]"
         }`}
       >
-        {/* Sidebar Toggle Button at the Top Right */}
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="absolute top-4 right-4 bg-gray-800 hover:bg-gray-700 p-2 rounded-lg transition-all"
-        >
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
-        </button>
-
-        <h1 className="text-3xl font-bold">Welcome Back, User!</h1>
+        <div>
+        <h1 className="text-3xl font-bold right-4">Welcome Back, User!</h1>
         <p className="text-gray-400 mt-2">
           Your AI Meeting Companion is ready.
         </p>
+        </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -70,26 +64,6 @@ const Dashboard = () => {
             </div>
           </Link>
         </div>
-
-        {/* Recent Meeting Summaries 
-        <div className="mt-8 bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold">Recent Meetings</h2>
-          <ul className="mt-4 space-y-3">
-            <li className="p-3 bg-gray-700 rounded-md hover:bg-gray-600 transition">
-              <Link to="/meetings-history" className="flex justify-between">
-                <span>📝 AI Summary for "Team Sync" (Yesterday)</span>
-                <span className="text-sm text-gray-300">View →</span>
-              </Link>
-            </li>
-            <li className="p-3 bg-gray-700 rounded-md hover:bg-gray-600 transition">
-              <Link to="/meetings-history" className="flex justify-between">
-                <span>📝 Key Insights from "Product Roadmap" (Last Week)</span>
-                <span className="text-sm text-gray-300">View →</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
-        */}
       </main>
     </div>
   );
