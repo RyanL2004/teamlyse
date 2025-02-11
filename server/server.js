@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import petRoute from './routes/petRoute.js';
 import connectDB from './config/db.js';
-
+import userRoute from './routes/userRoute.js';
 dotenv.config();
 const app = express();
 
@@ -16,6 +16,8 @@ connectDB();
 // Pet Route
 app.use('/api/pets', petRoute);
 
+//User Route
+app.use('/api/users', userRoute)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
