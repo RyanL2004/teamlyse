@@ -29,7 +29,7 @@ const LiveCompanion = ({ onSelectPet }) => {
       .catch((error) => console.error("❌ Error fetching pets:", error.message));
   }, []);  // ✅ Proper dependency array
   
-
+  
       
 
   const handleSelect = () => {
@@ -38,6 +38,10 @@ const LiveCompanion = ({ onSelectPet }) => {
       const chosenPet = pets[activeIndex];
       setSelectedPet(chosenPet);
       onSelectPet(chosenPet);
+
+      // save pet to localStograge so secletion persists 
+      localStorage.setItem("selectedPet", JSON.stringify(chosenPet));
+      console.log("Pet Save to localStorage:", chosenPet)
     }
   };
 
