@@ -20,8 +20,12 @@ import UpcomingMeetings from "./pages/UpcomingMeetings";
 import { SidebarProvider } from "./context/SidebarContext";
 import { AnimatePresence } from "framer-motion"; //Permit smooth transition between dashboard component pages
 
-function AnimatedRoutes() {
+
+function AnimatedRoutes({ onSelectPet }) {
   const location = useLocation(); // Detect current page
+
+
+
 
   return (
     <AnimatePresence mode="wait">
@@ -30,7 +34,8 @@ function AnimatedRoutes() {
         <Route exact path="/live-meeting" element={<LiveMeeting />} />
         <Route exact path="/upcoming-meetings" element={<UpcomingMeetings />} />
         <Route exact path="/meetings-history" element={<MeetingsHistory />} />
-        <Route exact path="/live-companion" element={<LiveCompanion />} />
+        {/* Passing 'onSelectPet' to liveCompanion  */}
+        <Route exact path="/live-companion" element={<LiveCompanion onSelectPet = {onSelectPet} />} />
       </Routes>
     </AnimatePresence>
   );
@@ -38,6 +43,12 @@ function AnimatedRoutes() {
 
 function App() {
   const [selectedPet, setSelectedPet] = useState(null);
+
+  const handlePetSelection = (pet) => {
+    console.log("🐾Selected pet:", pet);
+    setSelectedPet(pet);
+
+  };
   return (
     <div>
       
@@ -51,19 +62,10 @@ function App() {
       
       
       <SidebarProvider>
-        <AnimatedRoutes />
+        {/* Pass 'handlePetSelection' to AnimatedRoutes */}
+        <AnimatedRoutes onSelectPet = {handlePetSelection} />
       </SidebarProvider>
       
-      
-
-      {/*
-      <PetSelection onSelectPet={setSelectedPet} />
-      {selectedPet && (
-        <p style={{ textAlign: "center" }}>
-          Your pet, {selectedPet.name}, will assist you during meetings!
-        </p>
-      )}
-      */}
 
     </div>
   );
