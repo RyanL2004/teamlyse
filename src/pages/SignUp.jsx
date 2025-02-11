@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
+  const [name, setName ] = useState("")
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [step, setStep] = useState(1); // Step 1: Enter email, Step 2: Enter password
@@ -12,16 +13,30 @@ const SignUp = () => {
     return /\S+@\S+\.\S+/.test(email); // Simple regex check for valid email format
   };
 
+  
+
   // Handle Email Submission
   const handleEmailSubmit = (e) => {
     e.preventDefault();
     if (!email) {
-      setError("Email address is required.");
-    } else if (!validateEmail(email)) {
+      setError("Email address required.");
+    }
+    else if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
-    } else {
+    }
+    else {
       setError(""); // Clear errors
       setStep(2); // Move to password step
+    }
+  };
+
+  //Handle Name submission
+  const handleNameSubmit = (e) => {
+    e.preventDefault();
+    if (!name) {
+      setError("Name is required.");
+    } else {
+      setError(""); // Clear errors
     }
   };
 
@@ -32,7 +47,7 @@ const SignUp = () => {
       setError("Password is required.");
     } else {
       setError(""); // Clear errors
-      console.log("User Signed Up:", { email, password });
+      console.log("User Signed Up:", { name, email, password });
       // Proceed to the next step (e.g., navigate to dashboard)
     }
   };
@@ -49,6 +64,22 @@ const SignUp = () => {
         {/* Step 1: Enter Email */}
         {step === 1 && (
           <form onSubmit={handleEmailSubmit}>
+            {/* Name Input element */}
+            <div className="mb-4">
+              <label className="block text-gray-300 mb-2">Name</label>
+              <div className={`w-full rounded-lg border ${error ? "border-red-500" : "border-gray-600"} transition-all focus-within:border-blue-500 focus-within:shadow-lg`}>
+                <input 
+                  type="text" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-2 bg-transparent text-white outline-none placeholder-gray-400"
+                  placeholder="Enter your name"
+                />
+              </div>
+              {/* Error message below input */}
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            </div>
+            {/* Email Input element */}
             <div className="mb-4">
               <label className="block text-gray-300 mb-2">Email address</label>
               <div className={`w-full rounded-lg border ${error ? "border-red-500" : "border-gray-600"} transition-all focus-within:border-blue-500 focus-within:shadow-lg`}>
@@ -64,11 +95,16 @@ const SignUp = () => {
               {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
 
+          
+
             {/* Continue Button */}
             <button type="submit" className="w-full bg-gradient-to-r from-gray-500 to-blue-700 hover:from-gray-600 hover:to-blue-800 transition-all text-white py-2 rounded-lg font-semibold shadow-md">
               Continue
             </button>
           </form>
+          
+                    
+                  
         )}
 
         {/* Step 2: Enter Password (After Valid Email) */}
