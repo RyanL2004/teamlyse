@@ -13,15 +13,11 @@ const Footer = () => {
             {/* Logo */}
             <div className="mb-6 md:mb-0">
               <a href="#" className="flex items-center">
-                <img
-                  src="https://www.svgrepo.com/show/495702/shop.svg"
-                  className="h-8 me-3"
-                  alt="MeetPet Logo"
-                />
+
                 <h1 className="text-2xl font-bold">
-                  <span className="text-white">Meet</span>
-                  <span className="text-gray-400">Pet</span>
+                <span className="text-white">T&#x39E;AMLYSE</span>
                 </h1>
+
               </a>
             </div>
   
@@ -98,7 +94,7 @@ const Footer = () => {
             <span className="text-sm">
               © 2025{" "}
               <a href="#" className="hover:text-white transition duration-300">
-                MeetPet™
+              T&#x39E;AMLYSE™
               </a>
               . All Rights Reserved.
             </span>
