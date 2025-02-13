@@ -19,7 +19,7 @@ import LiveMeeting from "./pages/LiveMeeting";
 import UpcomingMeetings from "./pages/UpcomingMeetings";
 import { SidebarProvider } from "./context/SidebarContext";
 import { AnimatePresence } from "framer-motion"; //Permit smooth transition between dashboard component pages
-import  SidebarLayout  from "./components/SidebarLayout";
+
 
 
 
@@ -55,7 +55,7 @@ function App() {
     <div>
       
       <Routes>
-      <Route exact path="/" element={<SidebarLayout><Layouts><Home /></Layouts></SidebarLayout>} />
+      <Route exact path="/" element={<Layouts><Home /></Layouts>} />
       <Route exact path="/features" element={<Layouts><Features /></Layouts>} />
       <Route exact path="/pricing" element={<Layouts><Pricing /></Layouts>} />
       <Route exact path="/signin" element={<Layouts><SignIn /></Layouts>} />
