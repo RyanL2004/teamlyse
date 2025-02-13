@@ -8,8 +8,8 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
+import LoginPage from "./app/login/LoginPage";
+import GetStartedPage from "./app/GetStarted/GetStartedPage";
 import Home from "./components/Home";
 import Features from "./pages/Features";
 import Dashboard from "./pages/Dashboard";
@@ -19,6 +19,7 @@ import LiveMeeting from "./pages/LiveMeeting";
 import UpcomingMeetings from "./pages/UpcomingMeetings";
 import { SidebarProvider } from "./context/SidebarContext";
 import { AnimatePresence } from "framer-motion"; //Permit smooth transition between dashboard component pages
+
 
 
 
@@ -58,8 +59,8 @@ function App() {
       <Route exact path="/" element={<Layouts><Home /></Layouts>} />
       <Route exact path="/features" element={<Layouts><Features /></Layouts>} />
       <Route exact path="/pricing" element={<Layouts><Pricing /></Layouts>} />
-      <Route exact path="/signin" element={<Layouts><SignIn /></Layouts>} />
-      <Route exact path="/signup" element={<Layouts><SignUp /></Layouts>} />
+      <Route exact path="/login" element={<LoginPage />} />
+      <Route exact path="/getstarted" element={<GetStartedPage />} />
       </Routes>
       
       
