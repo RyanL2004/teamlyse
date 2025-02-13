@@ -28,7 +28,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link to="dashboard" className="hover:text-gray-300 transition duration-300">
+              <Link to="/dashboard" className="hover:text-gray-300 transition duration-300">
                 Dashboard
               </Link>
             </li>
@@ -46,12 +46,12 @@ const Navbar = () => {
 
           {/* Buttons - Desktop */}
           <div className="hidden md:flex items-center gap-6">
-            <Link to="signin">
+            <Link to="/login">
               <button className="text-white hover:text-gray-300 transition duration-300">
                 Log in
               </button>
             </Link>
-            <Link to="signup">
+            <Link to="/getstarted">
               <button className="bg-white text-black px-5 py-2 rounded-full font-semibold shadow-md hover:bg-gray-300 transition-all">
                 Get Started
               </button>
@@ -88,7 +88,7 @@ const Navbar = () => {
           <Link to="/features" className="text-white text-xl hover:text-gray-400" onClick={() => setIsOpen(false)}>
             Features
           </Link>
-          <Link to="dashboard" className="text-white text-xl hover:text-gray-400" onClick={() => setIsOpen(false)}>
+          <Link to="/dashboard" className="text-white text-xl hover:text-gray-400" onClick={() => setIsOpen(false)}>
             Dashboard
           </Link>
           <Link to="/pricing" className="text-white text-xl hover:text-gray-400" onClick={() => setIsOpen(false)}>
@@ -100,12 +100,12 @@ const Navbar = () => {
 
           {/* 🔹 Mobile Buttons - Properly Aligned */}
           <div className="flex items-center gap-5 mt-40">
-            <Link to="signin">
+            <Link to="/login">
               <button className="text-white text-lg hover:text-gray-300 transition duration-300">
                 Log in
               </button>
             </Link>
-            <Link to="signup">
+            <Link to="/getstarted">
               <button className="bg-white text-black text-lg px-6 py-2 rounded-full font-semibold shadow-md hover:bg-gray-200 transition-all">
                 Get Started
               </button>
