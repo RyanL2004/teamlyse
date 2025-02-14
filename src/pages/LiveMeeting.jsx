@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import DashboardSideBar from './DashboardSideBar'
+
 
 const LiveMeeting = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
