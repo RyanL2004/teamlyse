@@ -22,14 +22,13 @@ const HomeFeatures = () => {
           transition={{ duration: 1, delay: 0.2 }}
           className="text-gray-400 mt-4"
         >
-          MeetPet is your AI-powered meeting assistant that captures key insights, 
+          TΞAMLYSE is for an AI meeting assistant that captures key insights, 
           organizes your discussions, and enhances collaboration effortlessly.
         </motion.p>
       </div>
 
       {/* Features Grid */}
       <div className="mt-12 grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
-        
         {/* Feature 1 - AI-Powered Summaries */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 

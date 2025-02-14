@@ -25,26 +25,32 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { Link } from "react-router-dom"
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Admin",
+    email: "admin0@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
-      title: "Playground",
+      title: "Meetings",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
+          title: "Calendar",
+          url: "#",
+
+        },
+        {
           title: "History",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Debriefings",
           url: "#",
         },
         {
@@ -54,7 +60,7 @@ const data = {
       ],
     },
     {
-      title: "Models",
+      title: "Compagnions",
       url: "#",
       icon: Bot,
       items: [
@@ -159,16 +165,16 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link to="/">
                 <div
                   className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">TΞAMLYSE</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate text-xs">Dashboard</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
