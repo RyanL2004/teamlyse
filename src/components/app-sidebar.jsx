@@ -1,5 +1,6 @@
 import * as React from "react"
 import {
+  Monitor,
   BookOpen,
   Bot,
   Command,
@@ -10,6 +11,24 @@ import {
   Send,
   Settings2,
   SquareTerminal,
+  Airplay,
+  Presentation,
+  Calendar,
+  History,
+  BriefcaseBusiness,
+  UserRoundPen,
+  Handshake,
+  Pen,
+  PenLine,
+  Play,
+  School,
+  Flame,
+  Wrench,
+  Settings,
+  UserRoundCog,
+  CreditCard,
+  MousePointerClick,
+
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -35,47 +54,54 @@ const data = {
   },
   navMain: [
     {
+      title: "New Meeting",
+      url: "/meeting-panel",
+      icon: Play,
+      isActive: true,
+    },
+    {
       title: "Meetings",
       url: "#",
-      icon: SquareTerminal,
+      icon: Monitor,
       isActive: true,
       items: [
         {
-          title: "Calendar",
+          title: "My Calendar",
           url: "#",
-
+          icon: Calendar,
         },
         {
-          title: "History",
+          title: "My History",
           url: "#",
+          icon: History,
         },
         {
-          title: "Debriefings",
-          url: "#",
+          title: "My Debriefings",
+          url: "/debriefing",
+          icon: BriefcaseBusiness,
         },
         {
-          title: "Settings",
+          title: "Members",
           url: "#",
+          icon: UserRoundPen,
         },
       ],
     },
     {
-      title: "Compagnions",
+      title: " AI Compagnions",
       url: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
+          title: "Select",
           url: "#",
+          icon: MousePointerClick
         },
         {
-          title: "Explorer",
+          title: "Customise",
           url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
+          icon: Pen,
+        }
       ],
     },
     {
@@ -86,41 +112,49 @@ const data = {
         {
           title: "Introduction",
           url: "#",
+          icon: Flame,
         },
         {
           title: "Get Started",
           url: "#",
+          icon: Play,
         },
         {
           title: "Tutorials",
           url: "#",
+          icon: School,
         },
         {
           title: "Changelog",
           url: "#",
+          icon: PenLine,
         },
       ],
     },
     {
       title: "Settings",
       url: "#",
-      icon: Settings2,
+      icon: Settings,
       items: [
         {
           title: "General",
           url: "#",
+          icon: Settings2,
         },
         {
-          title: "Team",
+          title: "Teams",
           url: "#",
+          icon: UserRoundCog,
         },
         {
           title: "Billing",
           url: "#",
+          icon: CreditCard,
         },
         {
           title: "Limits",
           url: "#",
+          icon: Calendar,
         },
       ],
     },
