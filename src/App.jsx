@@ -19,6 +19,7 @@ import LiveMeeting from "./pages/LiveMeeting";
 import UpcomingMeetings from "./pages/UpcomingMeetings";
 import { SidebarProvider } from "./context/SidebarContext";
 import { AnimatePresence } from "framer-motion"; //Permit smooth transition between dashboard component pages
+import ChatbotUI from "./pages/ChatbotUI";
 
 
 
@@ -37,6 +38,7 @@ function AnimatedRoutes({ onSelectPet }) {
         <Route exact path="/live-meeting" element={<LiveMeeting />} />
         <Route exact path="/upcoming-meetings" element={<UpcomingMeetings />} />
         <Route exact path="/meetings-history" element={<MeetingsHistory />} />
+        <Route exact path="/debriefing" element={<ChatbotUI />} /> 
         {/* Passing 'onSelectPet' to liveCompanion  */}
         <Route exact path="/live-companion" element={<LiveCompanion onSelectPet = {onSelectPet} />} />
       </Routes>
