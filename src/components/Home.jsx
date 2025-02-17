@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import HomeFeatures from "../pages/HomeFeatures";
+import Carousel  from "../pages/Carousel";
 
 const Home = () => {
   return (
@@ -54,6 +55,10 @@ const Home = () => {
       </header>
 
       <HomeFeatures />
+      <Carousel />
+      
+      
+      
     </>
   );
 };
