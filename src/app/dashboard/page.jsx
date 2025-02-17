@@ -40,7 +40,7 @@ export default function Page() {
         </header>
 
         <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
-        <h1 className="text-center">Welcome to your Dashbord </h1>
+        <h1 className="text-center text-lg font-bold">Welcome to your Dashbord</h1>
           <div className="grid auto-rows-min gap-6 md:grid-cols-3">
             {/* Start a Meeting */}
             <motion.div

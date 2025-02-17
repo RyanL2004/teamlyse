@@ -1,17 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faCog, faPlus, faListCheck, faCalculator, 
-  faSearch, faSquare, faPaperclip, faMicrophone, 
-  faArrowRight
-} from '@fortawesome/free-solid-svg-icons';
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import './ChatbotUI.css';
+import React, { useState, useEffect, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCog,
+  faPlus,
+  faListCheck,
+  faCalculator,
+  faSearch,
+  faSquare,
+  faPaperclip,
+  faMicrophone,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import createHollowKnight from "./3DAnimatedCharacter";
+import "./ChatbotUI.css";
 
 const ChatbotUI = () => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState([]);
   const avatarContainerRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
@@ -23,21 +30,24 @@ const ChatbotUI = () => {
   useEffect(() => {
     const initializeScene = () => {
       if (!avatarContainerRef.current) return;
-      
-      // Create scene, camera, and renderer
+
       const scene = new THREE.Scene();
       sceneRef.current = scene;
-      
+
       const camera = new THREE.PerspectiveCamera(
         75,
-        avatarContainerRef.current.clientWidth / avatarContainerRef.current.clientHeight,
+        avatarContainerRef.current.clientWidth /
+          avatarContainerRef.current.clientHeight,
         0.1,
         1000
       );
       camera.position.z = 3;
       cameraRef.current = camera;
-      
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+      });
       renderer.setSize(
         avatarContainerRef.current.clientWidth,
         avatarContainerRef.current.clientHeight
@@ -45,63 +55,56 @@ const ChatbotUI = () => {
       renderer.setClearColor(0x000000, 0);
       avatarContainerRef.current.appendChild(renderer.domElement);
       rendererRef.current = renderer;
-      
-      // Add lights
+
+      // Lighting
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
       scene.add(ambientLight);
       const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
       directionalLight.position.set(0, 10, 10);
       scene.add(directionalLight);
-      
-      // Load a placeholder model (replace this with your own 3D avatar model)
-      const geometry = new THREE.SphereGeometry(1, 32, 32);
-      const material = new THREE.MeshStandardMaterial({ 
-        color: 0xEE8B21,
-        metalness: 0.3,
-        roughness: 0.4,
-      });
-      const sphere = new THREE.Mesh(geometry, material);
-      scene.add(sphere);
-      modelRef.current = sphere;
-      
-      // Optional: add orbit controls for development
+
+      // Load your 3D avatar model
+      const knightModel = createHollowKnight();
+      scene.add(knightModel);
+      modelRef.current = knightModel;
+
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
       controls.enableZoom = false;
-      
-      // Handle window resize
+
       const handleResize = () => {
         if (!avatarContainerRef.current) return;
-        camera.aspect = avatarContainerRef.current.clientWidth / avatarContainerRef.current.clientHeight;
+        camera.aspect =
+          avatarContainerRef.current.clientWidth /
+          avatarContainerRef.current.clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(
           avatarContainerRef.current.clientWidth,
           avatarContainerRef.current.clientHeight
         );
       };
-      window.addEventListener('resize', handleResize);
-      
-      // Animation loop
+      window.addEventListener("resize", handleResize);
+
       const animate = () => {
         requestAnimationFrame(animate);
         if (mixerRef.current) {
           mixerRef.current.update(clockRef.current.getDelta());
         }
         if (modelRef.current) {
-          modelRef.current.rotation.y += 0.005;
           modelRef.current.position.y = Math.sin(Date.now() * 0.001) * 0.1;
         }
         controls.update();
         renderer.render(scene, camera);
       };
       animate();
-      
-      // Cleanup
+
       return () => {
-        window.removeEventListener('resize', handleResize);
+        window.removeEventListener("resize", handleResize);
         if (rendererRef.current && avatarContainerRef.current) {
-          avatarContainerRef.current.removeChild(rendererRef.current.domElement);
+          avatarContainerRef.current.removeChild(
+            rendererRef.current.domElement
+          );
         }
         if (modelRef.current) {
           scene.remove(modelRef.current);
@@ -110,7 +113,7 @@ const ChatbotUI = () => {
         }
       };
     };
-    
+
     initializeScene();
   }, []);
 
@@ -118,60 +121,79 @@ const ChatbotUI = () => {
     setInputValue(e.target.value);
   };
 
+  // Simulate sending a message and receiving a bot response
   const handleSendMessage = () => {
-    if (inputValue.trim() === '') return;
-    console.log('Sending message:', inputValue);
-    // Trigger a response animation on the avatar here
-    setInputValue('');
+    if (inputValue.trim() === "") return;
+
+    // Add user's message
+    const userMessage = { sender: "user", text: inputValue };
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
+
+    // Simulate a delayed bot response
+    setTimeout(() => {
+      const botMessage = {
+        sender: "bot",
+        text: "I'm processing your request...",
+      };
+      setMessages((prev) => [...prev, botMessage]);
+    }, 1000);
   };
 
   const handleAvatarClick = () => {
-    // Example: Trigger an interactive animation when the avatar is clicked
-    console.log('Avatar clicked – triggering animation!');
+    // You can trigger an animation or change the state to simulate an interactive response
+    console.log("Avatar clicked – triggering animation!");
   };
 
   return (
     <div className="app-container">
       <div className="sidebar">
-        {/* Sidebar content remains unchanged */}
-        <div className="header-section">
-          <div className="user-profile">
-            <div>
-              <div className="profile-name">Dexter</div>
-              <div className="user-name">Data Analyst</div>
+        {/* 3D Avatar Container - Top of Sidebar */}
+        <div
+          ref={avatarContainerRef}
+          className="avatar-container"
+          onClick={handleAvatarClick}
+        ></div>
+
+        {/* Power-Ups Section */}
+        <div className="power-ups-section">
+          <div className="section-header">
+            <div className="section-title">Power-Ups</div>
+            <a href="#" className="see-all-link">
+              See all
+            </a>
+          </div>
+          <div className="power-ups-grid">
+            <div className="power-up-item">
+              <FontAwesomeIcon
+                icon={faListCheck}
+                style={{ color: "#9c5afc" }}
+              />
             </div>
-          </div>
-          <div className="settings-icon">
-            <FontAwesomeIcon icon={faCog} />
-          </div>
-        </div>
-        <div className="profile-section">
-          <div className="profile-avatar">
-            <img src="/api/placeholder/120/120" alt="Astronaut avatar" />
+            <div className="power-up-item">
+              <FontAwesomeIcon
+                icon={faCalculator}
+                style={{ color: "#4285f4" }}
+              />
+            </div>
+            <div className="power-up-item">
+              <FontAwesomeIcon
+                icon={faCalculator}
+                style={{ color: "#4285f4" }}
+              />
+            </div>
           </div>
           <button className="new-chat-button">
             <FontAwesomeIcon icon={faPlus} /> New Chat
           </button>
         </div>
-        <div className="power-ups-section">
-          <div className="section-header">
-            <div className="section-title">Power-Ups</div>
-            <a href="#" className="see-all-link">See all</a>
-          </div>
-          <div className="power-ups-grid">
-            <div className="power-up-item">
-              <FontAwesomeIcon icon={faListCheck} style={{ color: '#9c5afc' }} />
-            </div>
-            <div className="power-up-item">
-              <FontAwesomeIcon icon={faCalculator} style={{ color: '#4285f4' }} />
-            </div>
-          </div>
-        </div>
+
+        {/* History Section */}
         <div className="history-section">
           <div className="section-header">
             <div className="section-title">History</div>
             <div className="search-icon">
-              <FontAwesomeIcon icon={faSearch} style={{ fontSize: '14px' }} />
+              <FontAwesomeIcon icon={faSearch} style={{ fontSize: "14px" }} />
             </div>
           </div>
           <div className="day-label">Yesterday</div>
@@ -189,38 +211,65 @@ const ChatbotUI = () => {
           </div>
           <div className="day-label">Last 7 Days</div>
         </div>
-      </div>
-      
-      <div className="main-content">
-        {/* The avatar container is now a fixed widget in the bottom-right */}
-        <div 
-          ref={avatarContainerRef} 
-          className="avatar-container" 
-          onClick={handleAvatarClick}>
+
+        {/* User Profile & Header Section - Moved to Bottom */}
+        {/* Combined User Profile & Header Section */}
+        <div className="profile-header">
+          {/* User Details on the Left */}
+          <div className="profile-avatar">
+            <img src="/api/placeholder/120/120" alt="User avatar" />
+          </div>
+          
+          <div className="user-info">
+            <div className="profile-name">Dexter</div>
+            <div className="user-name">Data Analyst</div>
+          </div>
+
+          {/* Profile Avatar on the Right */}
+          
+
+          {/* Settings Icon (Aligned to Right) */}
+          <div className="settings-icon">
+            <FontAwesomeIcon icon={faCog} />
+          </div>
         </div>
-        
+      </div>
+
+      <div className="main-content">
         <div className="chat-section">
           <div className="greeting-message">
-            <h1>Hey, it's <span>Dexter</span> <span className="wave-emoji">👋</span></h1>
+            <h1>
+              Hey, it's <span>Dexter</span>{" "}
+              <span className="wave-emoji">👋</span>
+            </h1>
             <h2>How can I help?</h2>
           </div>
           <div className="chat-messages">
-            {/* Chat messages would be rendered here */}
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`message ${
+                  msg.sender === "user" ? "user-message" : "bot-message"
+                }`}
+              >
+                <div className="message-content">{msg.text}</div>
+              </div>
+            ))}
           </div>
         </div>
-        
+
         <div className="input-section">
           <div className="input-container">
             <div className="input-icon">
-              <FontAwesomeIcon icon={faPaperclip} style={{ color: '#999' }} />
+              <FontAwesomeIcon icon={faPaperclip} />
             </div>
-            <input 
-              type="text" 
-              className="input-field" 
+            <input
+              type="text"
+              className="input-field"
               placeholder="Press '/' to see integrations actions"
               value={inputValue}
               onChange={handleInputChange}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
             />
             <div className="input-icons">
               <div className="input-icon">
@@ -231,9 +280,12 @@ const ChatbotUI = () => {
               <FontAwesomeIcon icon={faArrowRight} />
             </button>
           </div>
-          <p className="footer-text">TΞAMLYSE Helpers can make mistakes. Consider double checking important information.</p>
+          <p className="footer-text">
+            TΞAMLYSE Helpers can make mistakes. Consider checking important
+            information.
+          </p>
         </div>
-        
+
         <button className="help-button">Help</button>
       </div>
     </div>
