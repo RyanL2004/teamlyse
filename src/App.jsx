@@ -20,6 +20,7 @@ import UpcomingMeetings from "./pages/UpcomingMeetings";
 import { SidebarProvider } from "./context/SidebarContext";
 import { AnimatePresence } from "framer-motion"; //Permit smooth transition between dashboard component pages
 import ChatbotUI from "./pages/ChatbotUI";
+import NewFeatures from "./pages/NewFeatures";
 
 
 
@@ -59,11 +60,14 @@ function App() {
       
       <Routes>
       <Route exact path="/" element={<Layouts><Home /></Layouts>} />
-      <Route exact path="/features" element={<Layouts><Features /></Layouts>} />
+      <Route exact path="/features" element={<Layouts><NewFeatures /></Layouts>} />
       <Route exact path="/pricing" element={<Layouts><Pricing /></Layouts>} />
       <Route exact path="/login" element={<LoginPage />} />
       <Route exact path="/getstarted" element={<GetStartedPage />} />
+      
       </Routes>
+      
+      
       
       
       <SidebarProvider>
