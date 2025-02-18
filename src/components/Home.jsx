@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import HomeFeatures from "../pages/HomeFeatures";
 import Carousel  from "../pages/Carousel";
-
+import FAQ from "../pages/FAQ";
 const Home = () => {
   return (
     <>
@@ -56,6 +56,7 @@ const Home = () => {
 
       <HomeFeatures />
       <Carousel />
+      <FAQ />
       
       
       
