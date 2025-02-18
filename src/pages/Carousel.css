@@ -69,9 +69,14 @@
 }
 .banner .content .author{
     font-family: Poppins;
-    text-align: right;
-    max-width: 200px;
+    text-align: left;
+    margin-left: 20px;
+    bottom: 10px;
+    max-width: 250px;
+    z-index: 3;
 }
+
+
 .banner .content h2{
     font-size: 3em;
 }
@@ -114,6 +119,7 @@
         text-align: center;
         padding: 0 30px;
     }
+    
 }
 @media screen and (max-width: 767px) {
     .banner .slider{

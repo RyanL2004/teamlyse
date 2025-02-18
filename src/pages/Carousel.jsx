@@ -1,6 +1,8 @@
 // Carousel.jsx
 import React from "react";
 import "./Carousel.css"; // Import your Carousel CSS
+import Pricing from "./Pricing";
+import { Link } from "react-router-dom";
 
 const Carousel = () => {
   // Define your items data (this can come from props or state)
@@ -41,6 +43,14 @@ const Carousel = () => {
           <p>
           Enhance your professional meetings experience with AI
           </p>
+          <Link to="/pricing">
+          <button className="rounded-full py-2 px-5 bg-white text-black font-semibold mt-5 transition-transform duration-200 hover:scale-110 hover:shadow-lg hover:bg-gray-300">
+            Get Started
+          </button>
+          </Link>
+  
+          
+          
         </div>
         <div className="model"></div>
       </div>
