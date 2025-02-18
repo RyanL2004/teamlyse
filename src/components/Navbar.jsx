@@ -47,7 +47,7 @@ const Navbar = () => {
           {/* Buttons - Desktop */}
           <div className="hidden md:flex items-center gap-6">
             <Link to="/login">
-              <button className="text-white hover:text-gray-300 transition duration-300">
+              <button className="text-white font-semibold hover:text-gray-300 transition duration-300">
                 Log in
               </button>
             </Link>
@@ -101,7 +101,7 @@ const Navbar = () => {
           {/* 🔹 Mobile Buttons - Properly Aligned */}
           <div className="flex items-center gap-5 mt-40">
             <Link to="/login">
-              <button className="text-white text-lg hover:text-gray-300 transition duration-300">
+              <button className="text-white font-bold text-lg hover:text-gray-300 transition duration-300">
                 Log in
               </button>
             </Link>
