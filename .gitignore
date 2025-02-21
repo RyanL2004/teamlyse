@@ -3,6 +3,9 @@
 
 # Ignore environment files
 .env
+.env.development
+.env.production
+
 
 
 # Logs
