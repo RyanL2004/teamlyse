@@ -1,82 +1,37 @@
-import { useState } from "react";
-import LiveCompanion from "./pages/LiveCompanion";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layouts from "./components/Layouts";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import Home from "./components/Home";
+import NewFeatures from "./pages/NewFeatures";
+import Pricing from "./pages/Pricing";
 import LoginPage from "./app/login/LoginPage";
 import GetStartedPage from "./app/GetStarted/GetStartedPage";
-import Home from "./components/Home";
-import Features from "./pages/Features";
 import Dashboard from "./pages/Dashboard";
-import Pricing from "./pages/Pricing";
-import MeetingsHistory from "./pages/MeetingsHistory";
 import LiveMeeting from "./pages/LiveMeeting";
-import UpcomingMeetings from "./pages/UpcomingMeetings";
-import { SidebarProvider } from "./context/SidebarContext";
-import { AnimatePresence } from "framer-motion"; //Permit smooth transition between dashboard component pages
+import MeetingsHistory from "./pages/MeetingsHistory";
 import ChatbotUI from "./pages/ChatbotUI";
-import NewFeatures from "./pages/NewFeatures";
+import UserProvider from "./context/UserContext";
 
-
-
-
-
-function AnimatedRoutes({ onSelectPet }) {
-  const location = useLocation(); // Detect current page
-
-
-
-
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route exact path="/dashboard" element={<Dashboard />} />
-        <Route exact path="/live-meeting" element={<LiveMeeting />} />
-        <Route exact path="/upcoming-meetings" element={<UpcomingMeetings />} />
-        <Route exact path="/meetings-history" element={<MeetingsHistory />} />
-        <Route exact path="/debriefing" element={<ChatbotUI />} /> 
-        {/* Passing 'onSelectPet' to liveCompanion  */}
-        <Route exact path="/live-companion" element={<LiveCompanion onSelectPet = {onSelectPet} />} />
-      </Routes>
-    </AnimatePresence>
-  );
-}
 
 function App() {
-  const [selectedPet, setSelectedPet] = useState(null);
-
-  const handlePetSelection = (pet) => {
-    console.log("🐾Selected pet:", pet);
-    setSelectedPet(pet);
-
-  };
   return (
-    <div>
-      
-      <Routes>
-      <Route exact path="/" element={<Layouts><Home /></Layouts>} />
-      <Route exact path="/features" element={<Layouts><NewFeatures /></Layouts>} />
-      <Route exact path="/pricing" element={<Layouts><Pricing /></Layouts>} />
-      <Route exact path="/login" element={<LoginPage />} />
-      <Route exact path="/getstarted" element={<GetStartedPage />} />
-      
-      </Routes>
-      
-      
-      
-      
-      <SidebarProvider>
-        {/* Pass 'handlePetSelection' to AnimatedRoutes */}
-        <AnimatedRoutes onSelectPet = {handlePetSelection} />
-      </SidebarProvider>
-      
+    <UserProvider>
+        {/* Define your routes for public pages */}
+        <Routes>
+          <Route path="/" element={<Layouts><Home /></Layouts>} />
+          <Route path="/features" element={<Layouts><NewFeatures /></Layouts>} />
+          <Route path="/pricing" element={<Layouts><Pricing /></Layouts>} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/getstarted" element={<GetStartedPage />} />
 
-    </div>
+        {/* Define routes for authenticated parts of your app */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/live-meeting" element={<LiveMeeting />} />
+          <Route path="/meetings-history" element={<MeetingsHistory />} />
+          <Route path="/debriefing" element={<ChatbotUI />} />
+          {/* Remove pet selection related routes if not needed */}
+        </Routes>
+    </UserProvider>
   );
 }
 
