@@ -1,36 +1,65 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+
 export default function LoginForm({ className, ...props }) {
   // 🔹 State Management for Email & Password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  // Add loading state management 
+  const [ loading, setLoading ] = useState(false);
+
+  const {setUser} = useContext(UserContext);
+  const navigate = useNavigate();
 
   // 🔥 Handle Login Submission
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
     
     // Basic validation
     if (!email || !password) {
       setError("Email and password are required.");
+      setLoading(false);
       return;
     }
 
     try {
-      // TODO: Replace this with actual API authentication logic
-      console.log("Logging in with:", { email, password });
+      const response = await fetch("/api/users/signin", {
+        method: "POST",
+        headers: { "Content-Type" : "application/json" },
+        credentials: "include", // Ensure Session cookies are included and sent
+        body: JSON.stringify({email, password}),
+      })
+      const data = await response.json();
 
-      // Example: Simulating API request delay
-      setTimeout(() => {
-        alert("Login Successful! Redirecting...");
-      }, 1000);
+      if(!response.ok) {
+        setError(data.error || "Login failed");
+        setLoading(false);
+        return;
+      }
 
-    } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      //Updating the gloabl user state 
+      setUser(data.user);
+      setLoading(false);
+
+      //Maybe Here: we optionally store the token  
+      // localStorage.setItem("token", data.token);
+
+      
+      //TODO: if User is already Upgraded we redirect him to the dashboard navigate ``` ("/dashboard"); ```
+      navigate("/pricing"); //Redirecting the user to the pricing component
+    }
+    catch(err) {
+      console.error("Login error", err)
+      setError("An unexpected error occured. Please try again.");
+      setLoading(false);
     }
   };
 
@@ -80,7 +109,7 @@ export default function LoginForm({ className, ...props }) {
 
       {/* Login Button */}
       <Button type="submit" className="w-full">
-        Login
+        {loading ? "Logging in..." : "Login"}
       </Button>
 
       {/* Divider */}

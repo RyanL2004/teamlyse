@@ -1,42 +1,67 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+
 export default function GetStartedForm({ className, ...props }) {
   // 🔹 State Management for Name, Email, and Password
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [ loading, setLoading ] = useState(false);
+
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   // 🔥 Handle Sign Up Submission
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
     // Validation
     if (!name || !email || !password) {
       setError("All fields are required.");
+      setLoading(false);
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError("Invalid email address.");
+      setLoading(false);
       return;
     }
 
     try {
-      // TODO: Replace this with actual API authentication logic
-      console.log("Signing up with:", { name, email, password });
+      const response = await fetch("/api/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", //Send cookies along with the request 
+        body: JSON.stringify({ name, email, password }),
+      })
 
-      // Simulate API request
-      setTimeout(() => {
-        alert("Account Created! Redirecting...");
-      }, 1000);
+      const data = await response.json();
+      if(!response.ok) {
+        setError(data.error || "Signup failed");
+        setLoading(false);
+        return;
+      }
 
-    } catch (err) {
+      //Update the global user state with the newly created user
+      setUser(data.user);
+      setLoading(false);
+      navigate("/pricing");
+
+    }
+    catch (err) {
+      console.error("Signup error", err);
       setError("Error creating account. Please try again.");
+      setLoading(false);
+      navigate("/pricing");
     }
   };
 
@@ -94,7 +119,7 @@ export default function GetStartedForm({ className, ...props }) {
 
       {/* Sign Up Button */}
       <Button type="submit" className="w-full">
-        Get Started
+        {loading ? "Signin up..." : "Get Started"}
       </Button>
 
       {/* Divider */}
