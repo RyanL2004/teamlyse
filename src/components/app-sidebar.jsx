@@ -45,13 +45,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Link } from "react-router-dom"
-
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 const data = {
-  user: {
-    name: "Admin",
-    email: "admin0@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "New Meeting",
@@ -190,9 +186,10 @@ const data = {
   ],
 }
 
-export function AppSidebar({
-  ...props
-}) {
+export function AppSidebar({...props}) {
+    const { user, loading } = useContext(UserContext);
+
+
   return (
     (<Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -219,7 +216,7 @@ export function AppSidebar({
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+      <NavUser user = {user} />
       </SidebarFooter>
     </Sidebar>)
   );
