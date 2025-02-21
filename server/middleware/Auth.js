@@ -5,13 +5,13 @@ import User from "../models/User.js";
 
 //Middleware to protect routes
 
-const protect = asyncHandler(async (req, res) => {
+const protect = asyncHandler(async (req, res, next) => {
     let token;
 
-    //Check if Auth hearder exists
-    if (req.header.authorization && req.header.authorization.startsWith("Bearer")) {
+    //Check if Auth header exists
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         try {
-        token = req.headers.authorization.split(" ")[1]; //Get token from header
+        token = req.headers.authorization.split(" ")[1]; //Get token from headers
         const decoded = jwt.verify( token, process.env.JWT_SECRET); //Decoding the token
         
         //Find user by decoded ID (excluding password)
