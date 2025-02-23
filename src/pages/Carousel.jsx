@@ -7,16 +7,16 @@ import { Link } from "react-router-dom";
 const Carousel = () => {
   // Define your items data (this can come from props or state)
   const items = [
-    { src: "/assets/images/dragon_1.jpg", position: 1 },
-    { src: "/assets/images/dragon_2.jpg", position: 2 },
-    { src: "/assets/images/dragon_3.jpg", position: 3 },
-    { src: "/assets/images/dragon_4.jpg", position: 4 },
-    { src: "/assets/images/dragon_6.jpg", position: 6 },
-    { src: "/assets/images/dragon_7.jpg", position: 7 },
-    { src: "/assets/images/dragon_8.jpg", position: 8 },
-    { src: "/assets/images/dragon_9.jpg", position: 9 },
-    { src: "/assets/images/dragon_10.jpg", position: 10 },
-    { src: "/assets/images/dragon_5.jpg", position: 5 },
+    { src: "/assets/mock-ups/1.png", position: 1 },
+    { src: "/assets/mock-ups/2.png", position: 2 },
+    { src: "/assets/mock-ups/3.png", position: 3 },
+    { src: "/assets/mock-ups/10) (2).png", position: 4 },
+    { src: "/assets/mock-ups/5.png", position: 6 },
+    { src: "/assets/mock-ups/6.png", position: 7 },
+    { src: "/assets/mock-ups/7.png", position: 8 },
+    { src: "/assets/mock-ups/8.png", position: 9 },
+    { src: "/assets/mock-ups/png.png", position: 10 },
+    { src: "/assets/mock-ups/10) (1).png", position: 5 },
   ];
 
   return (
