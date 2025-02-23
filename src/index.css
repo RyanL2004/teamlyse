@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 
-
+.home.hero {
+  background-image: url('/public/assets/images/a-cozy--stylized-3d-office-interior-with-warm-ambi.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -64,6 +69,17 @@
 @layer base {
   * {
     @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
