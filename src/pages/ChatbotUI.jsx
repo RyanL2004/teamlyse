@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCog,
@@ -11,9 +11,24 @@ import {
   faMicrophone,
   faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
+
+import {
+  User,
+  Settings,
+  Bell,
+  CreditCard,
+  LogOut,
+  Sparkles,
+  BadgeCheck,
+} from "lucide-react";
+
+import ChatNavUser from "../components/ChatbotUserNav";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import createHollowKnight from "./3DAnimatedCharacter";
+import { UserContext } from "../context/UserContext";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
 import "./ChatbotUI.css";
 
 const ChatbotUI = () => {
@@ -26,7 +41,11 @@ const ChatbotUI = () => {
   const modelRef = useRef(null);
   const mixerRef = useRef(null);
   const clockRef = useRef(new THREE.Clock());
+  const { user, loading } = useContext(UserContext);
+  const [notifications, setNotifications] = useState(3);
+  const [isOpen, setIsOpen] = useState(false);
 
+  const handleLogout = () => {};
   useEffect(() => {
     const initializeScene = () => {
       if (!avatarContainerRef.current) return;
@@ -215,24 +234,51 @@ const ChatbotUI = () => {
         {/* User Profile & Header Section - Moved to Bottom */}
         {/* Combined User Profile & Header Section */}
         <div className="profile-header">
-          {/* User Details on the Left */}
+          {/* User Details on the Left 
           <div className="profile-avatar">
             <img src="/api/placeholder/120/120" alt="User avatar" />
           </div>
-          
-          <div className="user-info">
-            <div className="profile-name">Dexter</div>
-            <div className="user-name">Data Analyst</div>
-          </div>
+          */}
+          {loading ? null : user ? (
+            <>
+              <Avatar>
+                <AvatarImage
+                  src={user.profilePhoto}
+                  alt={user.name}
+                ></AvatarImage>
+                <AvatarFallback>
+                  <div className="fallback-text">{user.name.charAt(0)}</div>
+                </AvatarFallback>
+              </Avatar>
+              <div className="user-info">
+                <div className="profile-name">{user.name}</div>
+                <div className="user-name">Data Analyst</div>
+              </div>
+              {/* Profile Avatar on the Right */}
 
-          {/* Profile Avatar on the Right */}
-          
-
-          {/* Settings Icon (Aligned to Right) */}
-          <div className="settings-icon">
-            <FontAwesomeIcon icon={faCog} />
-          </div>
+              {/* Settings Icon (Aligned to Right) */}
+              <button onClick={() => setIsOpen(!isOpen)}>
+                <FontAwesomeIcon
+                  icon={faCog}
+                  className="transition-transform duration-300"
+                  style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0)" }}
+                />
+              </button>
+            </>
+          ) : (
+            <div className="user-info">
+              <div className="profile-name">Dexter</div>
+              <div className="user-name">Data Analyst</div>
+            </div>
+          )}
         </div>
+                 {/* Dropdown Menu */}
+                 {isOpen && (
+                     <ChatNavUser 
+                     notifications={notifications} 
+                     onLogout={handleLogout}
+                   />
+          )}
       </div>
 
       <div className="main-content">
@@ -291,5 +337,4 @@ const ChatbotUI = () => {
     </div>
   );
 };
-
 export default ChatbotUI;

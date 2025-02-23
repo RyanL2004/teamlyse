@@ -9,9 +9,9 @@ export default function GetStartedPage() {
       {/* 🔹 Left Side: Background Image */}
       <div className="relative hidden lg:block bg-muted">
         <img
-          src="/assets/react.svg"  // Replace with your actual image
+          src="/assets/mock-ups/Background-mockups/mck2.png"  // Replace with your actual image
           alt="Welcome to TeamLyse"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2]"
         />
       </div>
 
