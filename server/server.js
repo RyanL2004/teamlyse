@@ -6,7 +6,7 @@ import MongoStore from 'connect-mongo';
 import connectDB from './config/db.js';
 import userRoute from './routes/userRoute.js';
 import petRoute from './routes/petRoute.js';
-
+import meetingRoute from './routes/meetingRoute.js';
 dotenv.config({
     path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
 });
@@ -51,6 +51,9 @@ app.use('/api/pets', petRoute);
 
 //User Route
 app.use('/api/users', userRoute)
+
+//Meeting Route
+app.use('/api/meetings', meetingRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -9,7 +9,7 @@ const features = [
     description:
       "No more manual note-taking your AI Compagnion listens, understands, and generates real-time meeting summaries so you can focus on the discussion",
     Icon: FaRobot,
-    avatar: "/public/assets/images/dragon_1.jpg",
+    avatar: "/assets/images/dragon_1.jpg",
     src: "#"
   },
   {
@@ -17,7 +17,7 @@ const features = [
     description:
       "Get real-time support, action items and solutions live without interrupting your flow.",
     Icon: FaHandshake,
-    avatar: "/public/assets/images/dragon_2.jpg",
+    avatar: "/assets/images/dragon_2.jpg",
     src: "#"
   },
   {
@@ -25,7 +25,7 @@ const features = [
     description:
       "Works effortlessly with Zoom, Teams, Slack, and more to streamline your workflow.",
     Icon: FaSyncAlt,
-    avatar: "/public/assets/images/dragon_3.jpg",
+    avatar: "/assets/images/dragon_3.jpg",
     src: "#"
   },
   {
@@ -33,7 +33,7 @@ const features = [
     description:
       "Your data is protected with top-tier security protocols to ensure privacy.",
     Icon: FaLock,
-    avatar: "/public/assets/images/dragon_4.jpg",
+    avatar: "/assets/images/dragon_4.jpg",
     src: "#"
   },
   {
@@ -41,7 +41,7 @@ const features = [
     description:
       "Engage with your AI companion using your voice, gestures, and dynamic interactions during meetings.",
     Icon: FaGamepad,
-    avatar: "/public/assets/images/dragon_5.jpg",
+    avatar: "/assets/images/dragon_5.jpg",
     src: "#"
   },
   {
@@ -49,7 +49,7 @@ const features = [
     description:
       "Customize your companion's personality, choose from professional, playful, or supportive based on your needs.",
     Icon: FaPaw,
-    avatar: "/public/assets/images/dragon_6.jpg",
+    avatar: "/assets/images/dragon_6.jpg",
     src: "#"
   },
 ];
