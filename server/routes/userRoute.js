@@ -3,7 +3,7 @@ import { signup, signin, getProfile, updateProfile } from "../controllers/userCo
 import protect from "../middleware/Auth.js";
 import { sessionProtect } from "../middleware/sessionProtect.js";
 import { body } from "express-validator";
-import { processTextStream } from "ai";
+
 
 const userRoute = express.Router();
 
