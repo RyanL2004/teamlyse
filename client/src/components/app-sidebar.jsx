@@ -50,12 +50,6 @@ import { UserContext } from "../context/UserContext";
 const data = {
   navMain: [
     {
-      title: "New Meeting",
-      url: "/meeting-panel",
-      icon: Play,
-      isActive: true,
-    },
-    {
       title: "Meetings",
       url: "#",
       icon: Monitor,

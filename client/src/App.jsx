@@ -7,8 +7,6 @@ import Pricing from "./pages/Pricing";
 import LoginPage from "./app/login/LoginPage";
 import GetStartedPage from "./app/GetStarted/GetStartedPage";
 import Dashboard from "./pages/Dashboard";
-import LiveMeeting from "./pages/LiveMeeting";
-import MeetingsHistory from "./pages/MeetingsHistory";
 import ChatbotUI from "./pages/ChatbotUI";
 import UserProvider from "./context/UserContext";
 
@@ -26,8 +24,6 @@ function App() {
 
         {/* Define routes for authenticated parts of your app */}
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/live-meeting" element={<LiveMeeting />} />
-          <Route path="/meetings-history" element={<MeetingsHistory />} />
           <Route path="/debriefing" element={<ChatbotUI />} />
           {/* Remove pet selection related routes if not needed */}
         </Routes>
