@@ -11,10 +11,10 @@ import {
   Sun,
   ChevronDown,
   User,
-  CreditCard
+  CreditCard,
 } from "lucide-react";
 import { UserContext } from "../context/UserContext";
-
+import { useAuth } from "../hooks/useAuth";
 const UserNav = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -23,17 +23,18 @@ const UserNav = ({ user }) => {
   const [isHovering, setIsHovering] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
+  const { logout } = useAuth();
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && !event.target.closest('.user-nav-container')) {
+      if (isOpen && !event.target.closest(".user-nav-container")) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
   const handleNotificationClick = () => {
@@ -42,18 +43,8 @@ const UserNav = ({ user }) => {
   };
 
   const handleLogout = () => {
-    fetch("/api/users/logout", {
-      method: "POST",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setUser(null);
-        navigate("/login");
-      })
-      .catch((err) => {
-        console.error("Error Logging out:", err);
-      });
+    // In your component
+    logout();
   };
 
   return (
@@ -66,7 +57,11 @@ const UserNav = ({ user }) => {
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          <Bell className={`h-5 w-5 text-gray-300 transition-transform duration-300 ${isHovering ? 'rotate-12' : ''}`} />
+          <Bell
+            className={`h-5 w-5 text-gray-300 transition-transform duration-300 ${
+              isHovering ? "rotate-12" : ""
+            }`}
+          />
           {showNotificationBadge && notifications > 0 && (
             <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center animate-pulse">
               {notifications}
@@ -80,8 +75,16 @@ const UserNav = ({ user }) => {
           className="p-2 rounded-full hover:bg-neutral-800 transition-all duration-300 transform hover:scale-110"
         >
           <div className="relative w-5 h-5">
-            <Sun className={`absolute h-5 w-5 text-gray-300 transition-all duration-500 ${isDark ? 'opacity-0 rotate-180' : 'opacity-100 rotate-0'}`} />
-            <Moon className={`absolute h-5 w-5 text-gray-300 transition-all duration-500 ${isDark ? 'opacity-100 rotate-0' : 'opacity-0 rotate-180'}`} />
+            <Sun
+              className={`absolute h-5 w-5 text-gray-300 transition-all duration-500 ${
+                isDark ? "opacity-0 rotate-180" : "opacity-100 rotate-0"
+              }`}
+            />
+            <Moon
+              className={`absolute h-5 w-5 text-gray-300 transition-all duration-500 ${
+                isDark ? "opacity-100 rotate-0" : "opacity-0 rotate-180"
+              }`}
+            />
           </div>
         </button>
 
@@ -94,14 +97,22 @@ const UserNav = ({ user }) => {
             <AvatarImage src={user.profilePhoto} alt={user.name} />
             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <ChevronDown className={`h-4 w-4 text-gray-300 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
+          <ChevronDown
+            className={`h-4 w-4 text-gray-300 transition-transform duration-300 ${
+              isOpen ? "rotate-180" : "rotate-0"
+            }`}
+          />
         </button>
       </div>
 
       {/* Dropdown Menu with fade and slide animation */}
-      <div className={`absolute right-0 mt-2 w-64 bg-neutral-950 rounded-lg shadow-lg border border-neutral-800 z-50 transition-all duration-300 transform origin-top-right ${
-        isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-      }`}>
+      <div
+        className={`absolute right-0 mt-2 w-64 bg-neutral-950 rounded-lg shadow-lg border border-neutral-800 z-50 transition-all duration-300 transform origin-top-right ${
+          isOpen
+            ? "opacity-100 scale-100"
+            : "opacity-0 scale-95 pointer-events-none"
+        }`}
+      >
         {/* User Info Section */}
         <div className="p-4 border-b border-neutral-800 transition-all duration-300 hover:bg-neutral-900">
           <div className="flex items-center gap-3">

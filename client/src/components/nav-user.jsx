@@ -31,8 +31,7 @@ import { useContext } from "react";
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
   const { setUser } = useContext(UserContext);
-  if(!user) return null;
- 
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -43,10 +42,8 @@ export function NavUser({ user }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src = {user.profilePhoto} alt={user.name} />
-                <AvatarFallback>
-                  {user.name.charAt(0)}
-                </AvatarFallback>
+                <AvatarImage src={user.profilePhoto} alt={user.name} />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
