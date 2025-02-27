@@ -17,7 +17,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: "http://localhost:5173", //Front-end origin
+    origin: ["http://localhost:5173", "https://meeting-companion.vercel.app"], // Accept Requests from either local development domain or deployed domain
     credentials: true, //Allows credential Cookies to be sent over
 } 
 
