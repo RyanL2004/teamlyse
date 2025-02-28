@@ -1,46 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { UserContext } from './UserContext';
 import { fetchUserProfile } from '../api/auth';
-
+import { useLocation } from 'react-router-dom';
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   // Function to revalidate the session and update state
-  const revalidateUser = () => {
-    fetchUserProfile()
-      .then((data) => {
-        setUser(data);
-        localStorage.setItem("user", JSON.stringify(data));
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("No active session found:", err.message);
-        setUser(null);
-        localStorage.removeItem("user");
-        setLoading(false);
-      });
+  const revalidateUser = async () => {
+    setLoading(true);
+    try{
+      const data = await fetchUserProfile();
+      setUser(data);
+    }
+    catch (err) {
+      console.log("No active session found:", err.message);
+      setUser(null);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
-    // Check localStorage for cached user data
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setLoading(false);
-    }
-    // Revalidate with the backend
+    // Always Revalidate the User session on mount or route changes
     revalidateUser();
-
-    // Listen for history changes (back/forward navigation)
-    const handlePopState = () => {
-      revalidateUser();
-    };
-    window.addEventListener("popstate", handlePopState);
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, []);
+    }, [location.pathname]);
+    
 
   return (
     <UserContext.Provider value={{ user, setUser, loading }}>
