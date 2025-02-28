@@ -10,11 +10,9 @@ export function useAuth() {
 
   const logout = async () => {
     try {
-      await apiLogout(); // Call the API logout
-      localStorage.removeItem("user"); // Clear any cached user data
-      setUser(null); // Clear the context
-      // Force a full page reload so that any cached state in the browser is cleared
-      window.location.href = "/login";
+      await apiLogout(); // Call the api logout endpoint
+      setUser(null); // Clear the User session state 
+      navigate('/login'); // Redirect to the login page after user session is cleared
     } catch (error) {
       console.error("Logout failed:", error);
       throw error;

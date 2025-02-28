@@ -1,8 +1,7 @@
 // Get the API URL from the environment variable
 // DRY: Create a function that handles the fetch User api logic and make it reusable accross different components 
-
-
 const API_URL = import.meta.env.VITE_API_URL;
+
 console.log('API_URL:', import.meta.env.VITE_API_URL)
 // Function to fetch User sign up 
 export async function signUp (name, email, password) {
