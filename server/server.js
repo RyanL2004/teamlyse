@@ -37,8 +37,9 @@ app.use(
         }),
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-            httpOnly: false, // Change back to true after production
-            secure: process.env.NODE_ENV === "production",
+            httpOnly: true, // Ensure cookie is inaccessible to client-side JS 
+            secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
+            sameSite: "lax", // Helps prevent CSRF while allowing same-site requests 
         },
     })
 );
