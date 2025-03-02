@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import {
   Monitor,
   BookOpen,
@@ -28,13 +28,12 @@ import {
   UserRoundCog,
   CreditCard,
   MousePointerClick,
+} from "lucide-react";
 
-} from "lucide-react"
-
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -43,8 +42,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { Link } from "react-router-dom"
+} from "@/components/ui/sidebar";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 const data = {
@@ -85,13 +84,13 @@ const data = {
         {
           title: "Select",
           url: "#",
-          icon: MousePointerClick
+          icon: MousePointerClick,
         },
         {
           title: "Customise",
           url: "#",
           icon: Pen,
-        }
+        },
       ],
     },
     {
@@ -178,21 +177,19 @@ const data = {
       icon: Map,
     },
   ],
-}
+};
 
-export function AppSidebar({...props}) {
-    const { user, loading } = useContext(UserContext);
-
+export function AppSidebar({ ...props }) {
+  const { user, loading } = useContext(UserContext);
 
   return (
-    (<Sidebar variant="inset" {...props}>
+    <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/">
-                <div
-                  className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -210,8 +207,12 @@ export function AppSidebar({...props}) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-      <NavUser user = {user} />
+        {loading? null : user ? (
+          <NavUser user={user} />
+        ) : (
+          <p>Please Login</p>
+        )}
       </SidebarFooter>
-    </Sidebar>)
+    </Sidebar>
   );
 }

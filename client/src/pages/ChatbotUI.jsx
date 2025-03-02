@@ -45,7 +45,8 @@ const ChatbotUI = () => {
   const [notifications, setNotifications] = useState(3);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleLogout = () => {};
+
+
   useEffect(() => {
     const initializeScene = () => {
       if (!avatarContainerRef.current) return;
@@ -276,7 +277,6 @@ const ChatbotUI = () => {
                  {isOpen && (
                      <ChatNavUser 
                      notifications={notifications} 
-                     onLogout={handleLogout}
                    />
           )}
       </div>

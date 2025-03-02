@@ -17,7 +17,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: "http://localhost:5173", //Front-end origin
+    origin: ["http://localhost:5173", "https://meeting-companion.vercel.app", "https://meeting-companion-6vebw48ce-rayan-louahches-projects.vercel.app" ], // Accept Requests from either local development domain or deployed domain
     credentials: true, //Allows credential Cookies to be sent over
 } 
 
@@ -37,8 +37,9 @@ app.use(
         }),
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-            httpOnly: false, // Change back to true after production
-            secure: process.env.NODE_ENV === "production",
+            httpOnly: true, // Ensure cookie is inaccessible to client-side JS 
+            secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
+            sameSite: "lax", // Helps prevent CSRF while allowing same-site requests 
         },
     })
 );
