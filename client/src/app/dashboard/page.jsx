@@ -86,7 +86,7 @@ export default function Page() {
               className="relative bg-gradient-to-br from-purple-900 to-purple-600 p-6 rounded-xl shadow-md text-white hover:scale-[1.02] transition duration-300"
             >
               <FaCommentDots className="text-4xl text-pink-400 animate-spin-slow" />
-              <h2 className="text-lg font-semibold mt-3">Chat with AI</h2>
+              <h2 className="text-lg font-semibold mt-3">Chat & Debrief</h2>
               <p className="text-gray-300 mt-2">Discuss insights and key moments from past meetings.</p>
               <motion.button
                 whileHover={{ scale: 1.1 }}
