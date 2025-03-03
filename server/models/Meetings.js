@@ -7,6 +7,7 @@ const meetingSchema = new mongoose.Schema({
     companionSelection: { type: String, required: true },
     chatHistory: { type: Array, default: []},
     summary: { type: String, default: ''},
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 
 }, { timestamps: true });
 
