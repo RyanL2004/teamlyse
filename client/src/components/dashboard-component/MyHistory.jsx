@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUpcomingMeetings, createMeeting, updateMeeting, deleteMeeting } from "@/store/meetingsSlice";
+import { fetchUpcomingMeetings } from "@/store/meetingsSlice";
 import { AppSidebar } from "../app-sidebar";
 import {
   SidebarInset,
@@ -48,7 +48,7 @@ const MyCalendar = () => {
                 <BreadcrumbItem className="flex items-center">
                   <FaHome className="text-white" />
                   <BreadcrumbLink
-                    href="#"
+                    asChild
                     className="ml-2 hover:text-gray-100 transition"
                   >
                     <Link to="/dashboard">Dashboard</Link>
