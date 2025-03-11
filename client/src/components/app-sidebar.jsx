@@ -55,17 +55,17 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "My Calendar",
-          url: "#",
+          title: "Calendar",
+          url: "/calendar",
           icon: Calendar,
         },
         {
-          title: "My History",
-          url: "#",
+          title: "History",
+          url: "/history",
           icon: History,
         },
         {
-          title: "My Debriefings",
+          title: "Debriefings",
           url: "/debriefing",
           icon: BriefcaseBusiness,
         },

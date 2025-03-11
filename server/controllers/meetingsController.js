@@ -1,11 +1,11 @@
 // Meetings Controller ( User Can Create, delete, Update (Debrief) a meeting )
-
 import Meeting from "../models/Meetings.js";
 
 // Get /api/meetings/upcoming - fetch meetings scheduled scheduled in the future 
 export const getUpcomingMeetings = async (req, res) => {
     try {
         const meetings = await Meeting.find({
+            user: req.user._id,
             scheduledTime: { $gte: new Date()}
         }).sort({ scheduledTime: 1 });
 
@@ -21,13 +21,18 @@ export const getUpcomingMeetings = async (req, res) => {
 export const createMeeting = async (req, res) => {
     try {
         const { title, scheduledTime, participants, companionSelection } = req.body;
-        const meeting = new Meeting({ title, scheduledTime, participants, companionSelection });
+        const meeting = new Meeting({
+             title,
+             scheduledTime,
+             participants, 
+             companionSelection,
+             user: req.user._id //Attach the meeting to the logged-in user
+        });
         await meeting.save();
-
         res.status(201).json({ meeting });
     }
     catch( error ) {
-        console.erro( "Error creating a new meeting ", error);
+        console.error( "Error creating a new meeting ", error);
         res.status(500).json({ error: "Internal Server Error "});
     }
 }

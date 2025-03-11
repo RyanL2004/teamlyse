@@ -1,8 +1,22 @@
-export const sessionProtect = (req, res, next) => {
+import User from '../models/User.js';
+
+export const sessionProtect = async ( req, res, next) => {
     if (req.session && req.session.userId) {
-        // Optionally, attaching user data from session to req.user 
-        req.user = req.session.user;
-        return next();
+        try {
+            const user = await User.findById(req.session.userId);
+            
+            // Check if User session doesn't exist 
+            if (!user){
+                return res.status(401).json({ error: "Unauthorized, user not found"});
+            }
+
+            req.user = user;
+            return next();
+        }
+        catch (error) {
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
     }
-    return res.status(401).json({ error: "Unauthorized, no session found"});
+
+    return res.status(401).json({ error: "Unauthorized, no session found" })
 }
