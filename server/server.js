@@ -17,7 +17,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: ["http://localhost:5173", "https://meeting-companion.vercel.app", "https://meeting-companion-6vebw48ce-rayan-louahches-projects.vercel.app" ], // Accept Requests from either local development domain or deployed domain
+    origin: ["http://localhost:5173", "https://meeting-companion.vercel.app", "https://meeting-companion-git-develop-2-rayan-louahches-projects.vercel.app" ], // Accept Requests from either local development domain or deployed domain
     credentials: true, //Allows credential Cookies to be sent over
 } 
 
@@ -39,9 +39,12 @@ app.use(
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
             httpOnly: true, // Ensure cookie is inaccessible to client-side JS 
             secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
-            sameSite: process.env.NODE.ENV === "production" ? "none":"lax", // Helps prevent CSRF while allowing same-site requests
-        
-        },  
+            sameSite:process.env.NODE_ENV === "production"? "none":"lax",
+            
+            // Optionally, you might need to set domain if required:
+            // domain: ".onrender.com",
+          },
+          
     })
 );
 
