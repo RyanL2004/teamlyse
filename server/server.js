@@ -37,9 +37,9 @@ app.use(
         }),
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-            httpOnly: true, // Ensure cookie is inaccessible to client-side JS 
+            httpOnly: true, // keep cookies inaccessible to client-side JS 
             secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
-            sameSite: process.env.NODE.ENV === "production" ? "none":"lax", // Helps prevent CSRF while allowing same-site requests
+            sameSite: process.env.NODE_ENV === "production" ? "none":"lax", // Helps prevent CSRF while allowing same-site requests
         
         },  
     })
