@@ -28,26 +28,24 @@ console.log("MONGO URI:", process.env.MONGO_URI)
 // Session Management config & Cookies 
 app.use(
     session({
-        secret: process.env.SESSION_SECRET,
-        resave:  false,
-        saveUninitialized: false,
-        store: MongoStore.create({
-            mongoUrl: process.env.MONGO_URI,
-            collectionName: "sessions",
-        }),
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-            httpOnly: true, // Ensure cookie is inaccessible to client-side JS 
-            secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
-            sameSite:process.env.NODE_ENV === "production"? "none":"lax",
-            
-            // Optionally, you might need to set domain if required:
-            // domain: ".onrender.com",
-          },
-          
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: "sessions",
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        httpOnly: true,
+        secure: true,       // Force secure: cookies only sent over HTTPS
+        sameSite: "none",   // Force cross-site cookie acceptance
+        // Optionally, if needed for cross-domain:
+        // domain: ".onrender.com",
+      },
     })
-);
-
+  );
+  
 
 
 
