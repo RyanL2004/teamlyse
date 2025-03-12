@@ -39,7 +39,7 @@ app.use(
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
             httpOnly: true, // Ensure cookie is inaccessible to client-side JS 
             secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
-            sameSite: "production"? "none":"lax",
+            sameSite:process.env.NODE_ENV === "production"? "none":"lax",
             
             // Optionally, you might need to set domain if required:
             // domain: ".onrender.com",
