@@ -25,6 +25,9 @@ app.use(cors({
 app.use(express.json());
 
 console.log("MONGO URI:", process.env.MONGO_URI)
+
+console.log("Using forced cookie settings: secure=true, sameSite='none'");
+
 // Session Management config & Cookies 
 app.use(
     session({
@@ -38,11 +41,10 @@ app.use(
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
-        secure: true,       // Force secure: cookies only sent over HTTPS
-        sameSite: "none",   // Force cross-site cookie acceptance
-        // Optionally, if needed for cross-domain:
-        // domain: ".onrender.com",
-      },
+        secure: true,          // Force secure cookies (requires HTTPS)
+        sameSite: "none",      // Force cross-site cookie acceptance
+        domain: ".onrender.com",  // Explicit domain for the cookie
+      }, 
     })
   );
   
