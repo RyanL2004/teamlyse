@@ -39,7 +39,8 @@ app.use(
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // HTTPS only in production
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            sameSite: process.env.NODE_ENV === "none"
+
             // Optionally, you might need to set domain if required:
             // domain: ".onrender.com",
           },
