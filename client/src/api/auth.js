@@ -53,6 +53,7 @@ export async function fetchUserProfile() {
         credentials: 'include', // Ensure cookies are included in request 
         
     });
+    console.log(response)
 
     if(!response.ok) {
         throw new Error('Not authenticated');

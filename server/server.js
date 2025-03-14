@@ -47,12 +47,12 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       httpOnly: true, // Ensure cookie is inaccessible to client-side JS
-      secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
+      secure: process.env.NODE_ENV === "production" ? true : false, //  Only over HTTPS in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      // Specify the production back-end domain 
+      domain: ".fly.dev",// Specify the production back-end domain 
 
       // Optionally, we might need to set domain if required:
-      // domain: ".onrender.com",
+      // domain: ".fly.dev",
     },
   })
 );
