@@ -1,6 +1,5 @@
 import express from "express";
 import { signup, signin, getProfile, updateProfile } from "../controllers/userController.js";
-import protect from "../middleware/Auth.js";
 import { sessionProtect } from "../middleware/sessionProtect.js";
 import { body } from "express-validator";
 

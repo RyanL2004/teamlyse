@@ -5,6 +5,8 @@ import { UserContext } from "../context/UserContext";
 import CustomNavUser from "./NavbarUser";
 
 const Navbar = () => {
+
+  
   // Conditional Rendering for Logged Users
   const { user, loading } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false); // State for mobile menu
@@ -143,7 +145,6 @@ const Navbar = () => {
 
           {/* 🔹 Mobile Buttons Or Logged User buttons */}
           <div className="flex items-center gap-5 mt-40">
-            
             {loading ? null : user ? (
               // Render logged user dropdown for mobile
               <NavbarUser user={user} />
