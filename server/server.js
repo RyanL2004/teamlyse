@@ -21,17 +21,16 @@ console.log("NODE_ENV:", process.env.NODE_ENV);
 
 // Middleware
 app.use(
-  cors({
-    // Accept Requests from either local development domain or deployed domain
-    origin: [
-      "http://localhost:5173",
-      "https://meeting-companion.vercel.app",
-      "https://meeting-companion-git-develop-2-rayan-louahches-projects.vercel.app",
-      "https://d8bao5pqag4tb.cloudfront.net", // CloudFront domain ]
-    ],
-    credentials: true, //Allows credential Cookies to be sent over
-  })
-);
+    cors({
+      origin: [
+        "http://localhost:5173", // Allow localhost for testing
+        "https://d8bao5pqag4tb.cloudfront.net", //  Deployed S3 Bucket CloudFont URL
+      ],
+      credentials: true, //  Allow cookies and authentication
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], //  Allow common HTTP methods
+      allowedHeaders: ["Content-Type", "Authorization"], //  Allow necessary headers
+    })
+  );
 app.use(express.json());
 
 console.log("MONGO URI:", process.env.MONGO_URI);
