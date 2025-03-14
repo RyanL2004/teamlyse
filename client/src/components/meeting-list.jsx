@@ -1,45 +1,70 @@
-import { format, isSameDay } from "date-fns"
-import { Calendar, Clock, Edit, MoreHorizontal, Trash } from "lucide-react"
+import { format, isSameDay } from "date-fns";
+import { Calendar, Clock, Edit, MoreHorizontal, Trash } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-import { useMeetingContext } from "@/context/meeting-context"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
-export function MeetingList() {
-  const { meetings, selectedDate, setSelectedMeeting, deleteMeeting } = useMeetingContext()
+// State Management Imports:
+import { useDispatch } from "react-redux";
+import { deleteMeetingThunk } from "@/store/meetingsSlice";
+import { useSelector } from "react-redux";
+ 
+export function MeetingList({ setSelectedMeeting, selectedDate }) {
+  // Get meetings from Redux 
+  const meetings = useSelector((state) => state.meetings.meetings) 
+  console.log("Meetings in Redux Store:", meetings); 
 
-  // Filter meetings by selected date if there is one
-  const filteredMeetings = selectedDate ? meetings.filter((meeting) => isSameDay(meeting.date, selectedDate)) : meetings
+  const dispatch = useDispatch();
 
-  // Sort meetings by date (ascending)
-  const sortedMeetings = [...filteredMeetings].sort((a, b) => a.date.getTime() - b.date.getTime())
+  // Filter meetings by selected date if provided, converting meeting.date to a Date object.
+  const filteredMeetings = selectedDate 
+    ? meetings.filter((meeting) => isSameDay(new Date(meeting.date), selectedDate))
+    : meetings;
 
-  // Group meetings by date
+  // Sort meetings by date (ascending), ensuring meeting.date is a Date object.
+  const sortedMeetings = [...filteredMeetings].filter(meeting => 
+    meeting.date && !isNaN(new Date(meeting.date))
+  ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
+
+  // Group meetings by date (again, converting to Date).
   const meetingsByDate = sortedMeetings.reduce((acc, meeting) => {
-    const dateKey = format(meeting.date, "yyyy-MM-dd")
+    const dateKey = format(new Date(meeting.date), "yyyy-MM-dd");
     if (!acc[dateKey]) {
-      acc[dateKey] = []
+      acc[dateKey] = [];
     }
-    acc[dateKey].push(meeting)
-    return acc
-  }, {})
+    acc[dateKey].push(meeting);
+    return acc;
+  }, {});
 
   const getStatusColor = (status) => {
     switch (status) {
       case "upcoming":
-        return "bg-blue-500"
+        return "bg-blue-500";
       case "in-progress":
-        return "bg-green-500"
+        return "bg-green-500";
       case "completed":
-        return "bg-gray-500"
+        return "bg-gray-500";
       case "cancelled":
-        return "bg-red-500"
+        return "bg-red-500";
       default:
-        return "bg-blue-500"
+        return "bg-blue-500";
     }
-  }
+  };
 
   if (sortedMeetings.length === 0) {
     return (
@@ -52,7 +77,7 @@ export function MeetingList() {
             : "No upcoming meetings scheduled"}
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -65,14 +90,16 @@ export function MeetingList() {
           </h3>
           <div className="grid gap-3">
             {dateMeetings.map((meeting) => (
-              <Card key={meeting.id} className="overflow-hidden">
+              <Card key={meeting._id} className="overflow-hidden">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
                     <div className="space-y-1">
                       <CardTitle className="text-lg">{meeting.title}</CardTitle>
                       <CardDescription className="flex items-center">
                         <Clock className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
-                        {format(meeting.date, "h:mm a")} - {format(meeting.endTime, "h:mm a")}
+                        {meeting.date && !isNaN(new Date(meeting.date)) ? format(new Date(meeting.date), "h:mm a") : "Invalid Date"} -{" "}
+                        {meeting.endTime && !isNaN(new Date(meeting.endTime)) ? format(new Date(meeting.endTime), "h:mm a") : "Invalid Date"}
+
                       </CardDescription>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -92,7 +119,10 @@ export function MeetingList() {
                             <Edit className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600" onClick={() => deleteMeeting(meeting.id)}>
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => dispatch(deleteMeetingThunk(meeting._id))}
+                          >
                             <Trash className="mr-2 h-4 w-4" />
                             Delete
                           </DropdownMenuItem>
@@ -124,6 +154,5 @@ export function MeetingList() {
         </div>
       ))}
     </div>
-  )
+  );
 }
-
