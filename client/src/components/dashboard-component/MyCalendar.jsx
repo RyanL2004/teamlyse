@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Plus } from "lucide-react";
 import { FaHome, FaChevronRight } from "react-icons/fa";
-
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -22,15 +21,54 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MeetingProvider, useMeetingContext } from "@/context/meeting-context";
+
 import { MeetingList } from "@/components/meeting-list";
 import { MeetingForm } from "@/components/meeting-form";
 import { Link } from "react-router-dom";
 
+//State Management Imports:
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUpcomingMeetings } from "@/store/meetingsSlice";
+
 function DashboardContent() {
-  const { selectedDate, selectedMeeting, setSelectedMeeting } =
-    useMeetingContext();
-  const [isCreating, setIsCreating] = useState(false);
+  const dispatch = useDispatch();
+
+  // Local State for UI-specific selections
+  const [ selectedDate, setSelectedDate ] = useState(null);
+  const [ selectedMeeting, setSelectedMeeting ] = useState(null);
+  const [ isCreating, setIsCreating ] = useState(false);
+
+  useEffect(() => {
+    const storedMeetings = localStorage.getItem("meetings");
+
+    if (storedMeetings) {
+        try {
+            const parsedMeetings = JSON.parse(storedMeetings);
+            console.log("Stored Meetings in Local Storage:", parsedMeetings);
+
+            if (Array.isArray(parsedMeetings) && parsedMeetings.length > 0) {
+                dispatch(fetchUpcomingMeetings()); // ✅ Always fetch from API
+            } else {
+                dispatch(fetchUpcomingMeetings()); // ✅ Fetch if storage is empty
+            }
+        } catch (error) {
+            console.error("Error parsing meetings from localStorage:", error);
+            dispatch(fetchUpcomingMeetings());
+        }
+    } else {
+        dispatch(fetchUpcomingMeetings());
+    }
+}, [dispatch]);
+
+// ✅ Listen for new meetings and update UI
+const meetings = useSelector((state) => state.meetings.meetings);
+useEffect(() => {
+    console.log("Meetings Updated in Redux:", meetings); // ✅ Debugging
+}, [meetings]);
+
+
+
+  
 
   const handleCreateMeeting = () => {
     setSelectedMeeting(null);
@@ -40,7 +78,7 @@ function DashboardContent() {
   const handleCancelForm = () => {
     setIsCreating(false);
     setSelectedMeeting(null);
-  };
+  }
 
   return (
     <SidebarInset>
@@ -99,7 +137,7 @@ function DashboardContent() {
                 />
               </div>
             ) : (
-              <MeetingList />
+              <MeetingList setSelectedMeeting= {setSelectedMeeting}  />
             )}
           </TabsContent>
 
@@ -115,7 +153,9 @@ function DashboardContent() {
                 />
               </div>
             ) : (
-              <MeetingList />
+              <MeetingList
+                setSelectedMeeting={setSelectedMeeting}
+              />
             )}
           </TabsContent>
         </Tabs>
@@ -126,11 +166,11 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <MeetingProvider>
+    
       <SidebarProvider>
         <AppSidebar />
         <DashboardContent />
       </SidebarProvider>
-    </MeetingProvider>
+    
   );
 }
