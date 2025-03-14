@@ -1,15 +1,15 @@
-# fly.toml app configuration file generated for server-solitary-river-9108 on 2025-03-14T06:29:13Z
+# fly.toml app configuration file generated for meeting-companion on 2025-03-14T07:21:14Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'server-solitary-river-9108'
+app = 'meeting-companion'
 primary_region = 'ams'
 
 [build]
 
 [http_service]
-  internal_port = 3000
+  internal_port = 8080
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -20,3 +20,4 @@ primary_region = 'ams'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 1024
