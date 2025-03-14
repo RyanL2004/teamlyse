@@ -50,6 +50,7 @@ app.use(
       httpOnly: true, // Ensure cookie is inaccessible to client-side JS
       secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      domain: ".onrender.com", // Specify the production back-end domain 
 
       // Optionally, you might need to set domain if required:
       // domain: ".onrender.com",
