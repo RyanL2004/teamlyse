@@ -46,7 +46,12 @@ export async function signIn (email, password) {
 // Function to fetch the current user's profile 
 export async function fetchUserProfile() {
     const response = await fetch(`${API_URL}/api/users/profile`, {
-        credentials: 'include'
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include', // Ensure cookies are included in request 
+        
     });
 
     if(!response.ok) {
