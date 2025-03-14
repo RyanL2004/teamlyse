@@ -47,7 +47,7 @@ app.use(
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      httpOnly: false, // Ensure cookie is inaccessible to client-side JS
+      httpOnly: true, // Ensure cookie is inaccessible to client-side JS
       secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       // Specify the production back-end domain 
@@ -67,7 +67,7 @@ app.use("/api/users", userRoute);
 //Meeting Route
 app.use("/api/meetings", meetingRoute);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
