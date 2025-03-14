@@ -1,20 +1,30 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { format } from "date-fns"
-import { CalendarIcon, Clock, MapPin, Users } from "lucide-react"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { format } from "date-fns";
+import { CalendarIcon, Clock, Italic, MapPin, Users } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { data } from "@/lib/data"
-import { useMeetingContext } from "@/context/meeting-context"
-import { cn } from "@/lib/utils"
-
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { data } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { createMeeting, updateMeetingThunk } from "@/store/meetingsSlice";
+import { fetchUpcomingMeetings } from "@/store/meetingsSlice";
+// Define your schema
 const formSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
@@ -34,27 +44,26 @@ const formSchema = z.object({
     required_error: "Please select a calendar.",
   }),
   participants: z.string().optional(),
-})
+});
 
 export function MeetingForm({ meeting, onCancel }) {
-  const { addMeeting, updateMeeting } = useMeetingContext()
-  const isEditing = !!meeting
+  const dispatch = useDispatch();
+  // Determine if editing based on the existence of a meeting prop
+  const isEditing = !!meeting;
 
-  // Helper function to convert Date to HH:MM string
-  const dateToTimeString = (date) => {
-    return format(date, "HH:mm")
-  }
+  // Helper function to convert Date to HH:mm string
+  const dateToTimeString = (date) => format(date, "HH:mm");
 
-  // Initialize form with meeting data if editing
+  // Set up the form defaults
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: isEditing
       ? {
           title: meeting.title,
           description: meeting.description,
-          date: meeting.date,
-          startTime: dateToTimeString(meeting.date),
-          endTime: dateToTimeString(meeting.endTime),
+          date: new Date(meeting.date),
+          startTime: dateToTimeString(new Date(meeting.date)),
+          endTime: dateToTimeString(new Date(meeting.endTime)),
           location: meeting.location,
           calendar: meeting.calendar,
           participants: meeting.participants.join(", "),
@@ -69,39 +78,49 @@ export function MeetingForm({ meeting, onCancel }) {
           calendar: "Work",
           participants: "",
         },
-  })
+  });
 
   function onSubmit(values) {
     // Parse time strings to create Date objects
-    const [startHours, startMinutes] = values.startTime.split(":").map(Number)
-    const [endHours, endMinutes] = values.endTime.split(":").map(Number)
+    const [startHours, startMinutes] = values.startTime.split(":").map(Number);
+    const [endHours, endMinutes] = values.endTime.split(":").map(Number);
 
-    const startDate = new Date(values.date)
-    startDate.setHours(startHours, startMinutes)
+    const startDate = new Date(values.date);
+    startDate.setHours(startHours, startMinutes);
+    const formattedStartDate = startDate.toISOString(); //  Convert to ISO 8601
 
-    const endDate = new Date(values.date)
-    endDate.setHours(endHours, endMinutes)
+    const endDate = new Date(values.date);
+    endDate.setHours(endHours, endMinutes);
+    const formattedEndDate = endDate.toISOString();
 
-    const participants = values.participants ? values.participants.split(",").map((p) => p.trim()) : []
+    const participants = values.participants // && Array.isArray(values.participants)
+      ? values.participants.split(",").map((p) => p.trim()) // Ensuring the participants is an Array
+      : [];
 
     const meetingData = {
       title: values.title,
       description: values.description || "",
-      date: startDate,
-      endTime: endDate,
+      date: formattedStartDate, // Ensure format is in ISO string 
+      endTime: formattedEndDate,
       location: values.location || "",
       calendar: values.calendar,
       status: "upcoming",
       participants,
-    }
+      companionSelection: "Dexter",
+    };
+    console.log("Meeting Data sent to Backend:", meetingData);
 
     if (isEditing) {
-      updateMeeting({ ...meetingData, id: meeting.id })
+      //Dispatch the update action with meeting id and updated data 
+      dispatch(updateMeetingThunk({ meetingId: meeting._id, updateData: meetingData }));
     } else {
-      addMeeting(meetingData)
+      // Dispatch the create action with the new meeting data
+      dispatch(createMeeting(meetingData)).then(() => {
+        dispatch(fetchUpcomingMeetings());
+      })
     }
 
-    onCancel()
+    onCancel(); // Call onCancel prop to reset form/UI
   }
 
   return (
@@ -128,7 +147,7 @@ export function MeetingForm({ meeting, onCancel }) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Meeting details" {...field} />
+                <Textarea placeholder="Tell your AI Compagnion what the meeting is going to be about" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -136,18 +155,22 @@ export function MeetingForm({ meeting, onCancel }) {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mt-2">
           <FormField
             control={form.control}
             name="date"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Date</FormLabel>
+                <FormLabel className="pb-1.5">Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
                         variant={"outline"}
-                        className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                        className={cn(
+                          "pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
                       >
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -162,8 +185,9 @@ export function MeetingForm({ meeting, onCancel }) {
               </FormItem>
             )}
           />
-
-          <FormField
+          </div>
+          <div className="">
+          <FormField 
             control={form.control}
             name="calendar"
             render={({ field }) => (
@@ -181,7 +205,7 @@ export function MeetingForm({ meeting, onCancel }) {
                         <SelectItem key={item} value={item}>
                           {item}
                         </SelectItem>
-                      )),
+                      ))
                     )}
                   </SelectContent>
                 </Select>
@@ -189,6 +213,7 @@ export function MeetingForm({ meeting, onCancel }) {
               </FormItem>
             )}
           />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -205,7 +230,6 @@ export function MeetingForm({ meeting, onCancel }) {
                   </div>
                 </FormControl>
                 <FormDescription>24-hour format (HH:MM)</FormDescription>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -235,7 +259,10 @@ export function MeetingForm({ meeting, onCancel }) {
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
+              <FormLabel>
+                Location
+                <span className="ml-1 italic test-sm text-muted-foreground">(optional)</span>
+              </FormLabel>
               <FormControl>
                 <div className="flex items-center">
                   <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -252,7 +279,10 @@ export function MeetingForm({ meeting, onCancel }) {
           name="participants"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Participants</FormLabel>
+              <FormLabel>
+                Participants
+                <span className= "ml-1 italic text-sm text-muted-foreground">(optional)</span>
+              </FormLabel>
               <FormControl>
                 <div className="flex items-center">
                   <Users className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -272,7 +302,9 @@ export function MeetingForm({ meeting, onCancel }) {
           <Button type="submit">{isEditing ? "Update Meeting" : "Create Meeting"}</Button>
         </div>
       </form>
+      <p className="footer-text">TΞAMLYSE Helpers can make mistakes. Consider checking important
+      information.</p>
     </Form>
-  )
+  );
 }
 
