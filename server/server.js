@@ -22,15 +22,16 @@ console.log("NODE_ENV:", process.env.NODE_ENV);
 // Middleware
 app.use(
     cors({
+      credentials: true, //  Allow cookies and authentication !
       origin: [
         "http://localhost:5173", // Allow localhost for testing
         "https://d8bao5pqag4tb.cloudfront.net", //  Deployed S3 Bucket CloudFont URL
       ],
-      credentials: true, //  Allow cookies and authentication
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], //  Allow common HTTP methods
       allowedHeaders: ["Content-Type", "Authorization"], //  Allow necessary headers
     })
   );
+app.set("trust proxy", true); // Trust proxy 
 app.use(express.json());
 
 console.log("MONGO URI:", process.env.MONGO_URI);
@@ -47,9 +48,9 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       httpOnly: true, // Ensure cookie is inaccessible to client-side JS
-      secure: process.env.NODE_ENV === "production" ? true : false, //  Only over HTTPS in production
+      secure: process.env.NODE_ENV === "production",  //  Only over HTTPS in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      domain: ".fly.dev",// Specify the production back-end domain 
+      // Specify the production back-end domain 
 
       // Optionally, we might need to set domain if required:
       // domain: ".fly.dev",
