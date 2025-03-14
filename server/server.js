@@ -14,10 +14,14 @@ const app = express();
 
 // Connect to db
 connectDB();
+console.log("NODE_ENV:", process.env.NODE_ENV);
 
 // Middleware
 app.use(cors({
-    origin: ["http://localhost:5173", "https://meeting-companion.vercel.app", "https://meeting-companion-git-develop-2-rayan-louahches-projects.vercel.app" ], // Accept Requests from either local development domain or deployed domain
+    // Accept Requests from either local development domain or deployed domain
+    origin: ["http://localhost:5173",
+            "https://meeting-companion.vercel.app",
+            "https://meeting-companion-git-develop-2-rayan-louahches-projects.vercel.app" ],
     credentials: true, //Allows credential Cookies to be sent over
 } 
 
@@ -25,29 +29,29 @@ app.use(cors({
 app.use(express.json());
 
 console.log("MONGO URI:", process.env.MONGO_URI)
-
-console.log("Using forced cookie settings: secure=true, sameSite='none'");
-
 // Session Management config & Cookies 
 app.use(
     session({
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        collectionName: "sessions",
-      }),
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        httpOnly: true,
-        secure: true,          // Force secure cookies (requires HTTPS)
-        sameSite: "none",      // Force cross-site cookie acceptance
-        domain: ".onrender.com",  // Explicit domain for the cookie
-      }, 
+        secret: process.env.SESSION_SECRET,
+        resave:  false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: process.env.MONGO_URI,
+            collectionName: "sessions",
+        }),
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+            httpOnly: true, // Ensure cookie is inaccessible to client-side JS 
+            secure: process.env.NODE_ENV === "production", //  Only over HTTPS in production
+            sameSite:process.env.NODE_ENV === "production"? "none":"lax",
+            
+            // Optionally, you might need to set domain if required:
+            // domain: ".onrender.com",
+          },
+          
     })
-  );
-  
+);
+
 
 
 

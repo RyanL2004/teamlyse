@@ -7,11 +7,16 @@ export async function fetchUpcomingMeetings() {
         const response = await fetch(`${API_URL}/api/meetings/upcoming`, {
             credentials: 'include'
         });
+
         if (!response.ok){
             throw new Error('Failed to fetch upcoming meetings');
         }
+
+
         const data = await response.json();
+        console.log("Meetings received from API:", data); // Debuging the API response 
         return data;
+
     } catch (error) {
         console.error('Error fetching upcoming meetings:', error);
         throw error;
@@ -21,7 +26,7 @@ export async function fetchUpcomingMeetings() {
 // Fetch Create a new meeting 
 export async function createMeeting(meetingData) {
     try {
-
+        console.log("1 SendingMeeting Data to Backend:", meetingData);
     // Create the server's response behaviour
     const response = await fetch('/api/meetings', {
         method: 'POST',
@@ -34,6 +39,8 @@ export async function createMeeting(meetingData) {
 
     // Check if server is responding to req
     if (!response.ok) {
+        const errorResponse = await response.json();
+        console.error("Server Error Response:", errorResponse); // Print the server error 
         throw new Error('Failder to create meeting');
     };
     return await response.json();
