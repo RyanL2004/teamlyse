@@ -28,7 +28,7 @@ export async function createMeeting(meetingData) {
     try {
         console.log("1 SendingMeeting Data to Backend:", meetingData);
     // Create the server's response behaviour
-    const response = await fetch('/api/meetings', {
+    const response = await fetch(`${API_URL}/api/meetings`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -57,7 +57,7 @@ export async function createMeeting(meetingData) {
 export async function updateMeeting( meetingId, updateData ) {
     try {
 
-        const response = await fetch(`api/meetings/${meetingId}`, {
+        const response = await fetch(`${API_URL}/api/meetings/${meetingId}`, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -83,7 +83,7 @@ export async function updateMeeting( meetingId, updateData ) {
 export async function deleteMeeting (meetingId) {
     try {
 
-        const response = fetch (`api/meetings/${meetingId}`, {
+        const response = fetch (`${API_URL}/api/meetings/${meetingId}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
