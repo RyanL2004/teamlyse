@@ -121,6 +121,7 @@ export function MeetingList({ setSelectedMeeting, selectedDate }) {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-600"
+                            // Unique Fingerprint: 10RLAO01YU04
                             onClick={() => dispatch(deleteMeetingThunk(meeting._id))}
                           >
                             <Trash className="mr-2 h-4 w-4" />

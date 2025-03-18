@@ -66,6 +66,7 @@
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
+    /* Unique Fingerprint: 10RLAO01YU04 */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -101,6 +102,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-
-

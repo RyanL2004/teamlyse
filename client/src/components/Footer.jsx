@@ -99,7 +99,7 @@ const Footer = () => {
               . All Rights Reserved.
             </span>
   
-            {/* Social Icons */}
+            {/* Social Icons Unique Fingerprint: 10RLAO01YU04 */}
             <div className="flex mt-4 space-x-6 sm:mt-0">
             <a href="https://github.com/RyanL2004" className="hover:text-white transition">
               <FontAwesomeIcon icon={faGithub} className="text-xl" />

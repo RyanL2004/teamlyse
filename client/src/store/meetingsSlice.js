@@ -146,8 +146,8 @@ const meetingsSlice = createSlice({
                 console.log("New Meeting Added:", action.payload); //  Debugging
                 state.meetings.push(action.payload); //  Add new meeting directly
                 state.meetings.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        
-                // ✅ Store in localStorage immediately
+                // UF: 10RLAO01YU04
+                // Store in localStorage immediately
                 try {
                     localStorage.setItem("meetings", JSON.stringify(state.meetings));
                 } catch (error) {
