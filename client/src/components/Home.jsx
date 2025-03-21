@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <>
       <header
-      className="relative flex flex-col md:grid md:grid-cols-2 items-center justify-center px-12 md:px-20 py-20 text-white min-h-screen bg-cover bg-center"
+      className="relative flex flex-col md:grid md:grid-cols-2 items-center justify-center px-12 md:px-20 py-20 text-white min-h-screen bg-cover bg-center"// Unique Fingerprint: 10RLAO01YU04
       style={{ backgroundImage: "url('/assets/images/Home3.png')" }}
       >
       <div className="absolute inset-0 bg-black bg-opacity-50"></div> {/* Dark Overlay */}

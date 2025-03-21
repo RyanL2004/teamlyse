@@ -2,6 +2,7 @@
 // DRY: Create a function that handles the fetch User api logic and make it reusable accross different components 
 const API_URL = import.meta.env.VITE_API_URL;
 
+
 console.log('API_URL:', import.meta.env.VITE_API_URL)
 // Function to fetch User sign up 
 export async function signUp (name, email, password) {
@@ -45,8 +46,14 @@ export async function signIn (email, password) {
 // Function to fetch the current user's profile 
 export async function fetchUserProfile() {
     const response = await fetch(`${API_URL}/api/users/profile`, {
-        credentials: 'include'
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include', // Ensure cookies are included in request 
+        
     });
+    console.log(response)
 
     if(!response.ok) {
         throw new Error('Not authenticated');
@@ -56,16 +63,24 @@ export async function fetchUserProfile() {
 
 // Function to Logout, fetch and Kill User Session
 
-
 export async function logout() {
-    const response = await fetch(`${API_URL}/api/users/logout`, {
-      method: 'POST',
-      credentials: 'include'
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Logout failed');
+    try {
+        const response = await fetch(`${API_URL}/api/users/logout`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Logout failed");
+        }
+
+        
+        return response.json();
     }
-    return response.json();
-  }
+    catch (error) {
+        console.error("Logout Error", error);
+        throw error;
+    }
+}
   

@@ -29,5 +29,8 @@
     "nodemon": "^3.1.9",
     "redis": "^4.7.0",
     "server": "file:"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.8"
   }
 }
