@@ -36,7 +36,7 @@ function App() {
         <Route path="/debriefing" element={<ChatbotUI />} />
         <Route path="/calendar" element={<MyCalendar />} />
         <Route path="/history" element={<MyHistory />} />
-        <Route path="/companion" element={<CompanionSelection />} />
+        <Route path="/select-companion" element={<CompanionSelection />} />
         
         {/* Remove pet selection related routes if not needed */}
       </Routes>

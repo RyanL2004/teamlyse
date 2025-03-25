@@ -83,7 +83,7 @@ const data = {
       items: [
         {
           title: "Select",
-          url: "/companion",
+          url: "/select-companion",
           icon: MousePointerClick,
         },
         {
