@@ -7,6 +7,8 @@ import connectDB from "./config/db.js";
 import userRoute from "./routes/userRoute.js";
 import petRoute from "./routes/petRoute.js";
 import meetingRoute from "./routes/meetingRoute.js";
+import companionRoute from "./routes/companionRoute.js";
+
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -66,6 +68,9 @@ app.use("/api/users", userRoute);
 
 //Meeting Route
 app.use("/api/meetings", meetingRoute);
+
+// Companion Route 
+app.use("/api/companions", companionRoute);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
