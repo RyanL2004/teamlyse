@@ -1,5 +1,5 @@
 "use client";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Plus } from "lucide-react";
@@ -30,55 +30,79 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUpcomingMeetings } from "@/store/meetingsSlice";
 
+
+
 function DashboardContent() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const selectedFromState = location.state?.selectedCompanion;
 
   // Local State for UI-specific selections
-  const [ selectedDate, setSelectedDate ] = useState(null);
-  const [ selectedMeeting, setSelectedMeeting ] = useState(null);
-  const [ isCreating, setIsCreating ] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [shouldResumeForm, setShouldResumeForm] = useState(false);
+  
+  // Check resume form flag and keep the form Open 
+  useEffect(() => {
+    if (location.state?.resumeForm) {
+      setShouldResumeForm(true);
+      setIsCreating(true);
+      navigate(location.pathname, { replace: true }); // Cleans up the state 
+    }
+  }, [location.state, navigate, location.pathname]);
 
   useEffect(() => {
     const storedMeetings = localStorage.getItem("meetings");
 
     if (storedMeetings) {
-        try {
-            const parsedMeetings = JSON.parse(storedMeetings);
-            console.log("Stored Meetings in Local Storage:", parsedMeetings);
+      try {
+        const parsedMeetings = JSON.parse(storedMeetings);
+        console.log("Stored Meetings in Local Storage:", parsedMeetings);
 
-            if (Array.isArray(parsedMeetings) && parsedMeetings.length > 0) {
-                dispatch(fetchUpcomingMeetings()); // ✅ Always fetch from API
-            } else {
-                dispatch(fetchUpcomingMeetings()); // ✅ Fetch if storage is empty
-            }
-        } catch (error) {
-            console.error("Error parsing meetings from localStorage:", error);
-            dispatch(fetchUpcomingMeetings());
+        if (Array.isArray(parsedMeetings) && parsedMeetings.length > 0) {
+          dispatch(fetchUpcomingMeetings()); // ✅ Always fetch from API
+        } else {
+          dispatch(fetchUpcomingMeetings()); // ✅ Fetch if storage is empty
         }
-    } else {
+      } catch (error) {
+        console.error("Error parsing meetings from localStorage:", error);
         dispatch(fetchUpcomingMeetings());
+      }
+    } else {
+      dispatch(fetchUpcomingMeetings());
     }
-}, [dispatch]);
+  }, [dispatch]);
 
-// ✅ Listen for new meetings and update UI
-const meetings = useSelector((state) => state.meetings.meetings);
-useEffect(() => {
+  // ✅ Listen for new meetings and update UI
+  const meetings = useSelector((state) => state.meetings.meetings);
+  useEffect(() => {
     console.log("Meetings Updated in Redux:", meetings); // ✅ Debugging
-}, [meetings]);
-
-
-
-  
+  }, [meetings]);
 
   const handleCreateMeeting = () => {
     setSelectedMeeting(null);
     setIsCreating(true);
   };
 
-  const handleCancelForm = () => {
+  const handleCancelForm = (options = {}) => {
+    const { removeDraft = true } = options;
     setIsCreating(false);
     setSelectedMeeting(null);
-  }
+    setShouldResumeForm(false);
+
+    if (removeDraft) {
+      localStorage.removeItem("meetingFormDraft")
+    }
+
+
+    //Remove the localStorage draft:
+    // localStorage.removeItem("meetingFormDraft")
+
+  };
+  
 
   return (
     <SidebarInset>
@@ -94,7 +118,7 @@ useEffect(() => {
                   asChild
                   className="ml-2 hover:text-gray-100 transition"
                 >
-                  <Link to = "/dashboard">Dashboard</Link>
+                  <Link to="/dashboard">Dashboard</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator>
@@ -126,7 +150,7 @@ useEffect(() => {
           </div>
 
           <TabsContent value="upcoming" className="mt-0">
-            {isCreating || selectedMeeting ? (
+            {isCreating || shouldResumeForm || selectedMeeting ? (
               <div className="max-w-2xl mx-auto">
                 <h2 className="text-2xl font-bold mb-4">
                   {selectedMeeting ? "Edit Meeting" : "Create New Meeting"}
@@ -134,10 +158,11 @@ useEffect(() => {
                 <MeetingForm
                   meeting={selectedMeeting || undefined}
                   onCancel={handleCancelForm}
+                  selectedFromNavigation={selectedFromState}
                 />
               </div>
             ) : (
-              <MeetingList setSelectedMeeting= {setSelectedMeeting}  />
+              <MeetingList setSelectedMeeting={setSelectedMeeting} />
             )}
           </TabsContent>
 
@@ -153,9 +178,7 @@ useEffect(() => {
                 />
               </div>
             ) : (
-              <MeetingList
-                setSelectedMeeting={setSelectedMeeting}
-              />
+              <MeetingList setSelectedMeeting={setSelectedMeeting} />
             )}
           </TabsContent>
         </Tabs>
@@ -166,11 +189,9 @@ useEffect(() => {
 
 export default function DashboardPage() {
   return (
-    
-      <SidebarProvider>
-        <AppSidebar />
-        <DashboardContent />
-      </SidebarProvider>
-    
+    <SidebarProvider>
+      <AppSidebar />
+      <DashboardContent />
+    </SidebarProvider>
   );
 }
