@@ -47,7 +47,7 @@ const companions = [
     scale: 1,
     position: [0, -0.5, 0],
     rotation: [0, Math.PI / 2, 0],
-    color: "#ff6b35",
+    color: "#C58EC0",
   },
   {
     name: "Brody",
@@ -59,7 +59,7 @@ const companions = [
     scale: 1,
     position: [0, -0.5, 0],
     rotation: [0, Math.PI / 2, 0],
-    color: "#ff6b35",
+    color: "#2980B9",
   }
 ];
 
