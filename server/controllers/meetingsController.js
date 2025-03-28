@@ -28,9 +28,10 @@ export const createMeeting = async (req, res) => {
         console.log("Request Body:", req.body); // Check req
         console.log("Authentificated User:", req.user); // Check if User is autheticated
 
-        const { title, date, endTime, location, calendar, status, participants, companionSelection } = req.body
 
-        if(!title || !date || !endTime || !calendar || !companionSelection) {
+        const { title, date, endTime, location, calendar, status, participants, companion } = req.body
+
+        if(!title || !date || !endTime || !calendar || !companion) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
@@ -45,7 +46,7 @@ export const createMeeting = async (req, res) => {
             calendar,
             status: status || "upcoming", // Default status value if not provided
             participants, //: validParticipants, // Use only valid ObjectIds
-            companionSelection,
+            companion,
             user: req.user._id // Attach the logged in user 
         })
 

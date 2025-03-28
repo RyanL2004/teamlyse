@@ -1,9 +1,11 @@
+"use client";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Clock, Italic, MapPin, Users } from "lucide-react";
-
+import { CalendarIcon, Clock, MapPin, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,9 +23,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { data } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { useDispatch } from "react-redux";
-import { createMeeting, updateMeetingThunk } from "@/store/meetingsSlice";
-import { fetchUpcomingMeetings } from "@/store/meetingsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { createMeeting, updateMeetingThunk, fetchUpcomingMeetings } from "@/store/meetingsSlice";
+
+
 // Define your schema
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -47,12 +50,53 @@ const formSchema = z.object({
 });
 
 export function MeetingForm({ meeting, onCancel }) {
+
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
+
   // Determine if editing based on the existence of a meeting prop
   const isEditing = !!meeting;
 
+  // Optionally, get a companion from navigation state (if passed)
+  const companionFromNav = location.state?.selectedCompanion;
+
+  // Get selected companion id from Redux
+  const { companionsList, selectedCompanionId } = useSelector(
+    (state) => state.companions
+  );
+
+  // Look up the full companion object using the ID
+  const selectedCompanion =
+    companionsList.find((comp) => comp._id === selectedCompanionId) ||
+    companionFromNav ||
+    null;
+
+  // Select Companion Event Handler: (without triggering parent state)
+  function handleSelectCompanion () {
+    // Let the parent component handleCancelForm we are closing the form layout 
+    // And not to remove the localStorageDraft
+    onCancel({ removeDraft: false})
+    
+    // Now navigate to the companion route safely with resumeForm: true
+    navigate("/select-companion", {
+    state: { from: "calendar",resumeForm: true }
+  });
+}
+
   // Helper function to convert Date to HH:mm string
   const dateToTimeString = (date) => format(date, "HH:mm");
+
+  // Save the meetingform draft 
+  const draft = localStorage.getItem("meetingFormDraft");
+  let parsedDraft = null;
+  try {
+    parsedDraft = draft ? JSON.parse(draft) : null
+  }
+  catch (error) {
+    console.error('Invalid meeting draft in localStorage:', error);
+  }
+
 
   // Set up the form defaults
   const form = useForm({
@@ -68,7 +112,10 @@ export function MeetingForm({ meeting, onCancel }) {
           calendar: meeting.calendar,
           participants: meeting.participants.join(", "),
         }
-      : {
+      : parsedDraft ? {
+          ...parsedDraft,
+          date: new Date(parsedDraft.date),
+      } : {
           title: "",
           description: "",
           date: new Date(),
@@ -80,6 +127,15 @@ export function MeetingForm({ meeting, onCancel }) {
         },
   });
 
+
+      // Save form input persistance
+      useEffect(() => {
+        const subscription = form.watch((values) => {
+          localStorage.setItem("meetingFormDraft", JSON.stringify(values));
+        });
+        return () => subscription.unsubscribe();
+      }, [form]);
+
   function onSubmit(values) {
     // Parse time strings to create Date objects
     const [startHours, startMinutes] = values.startTime.split(":").map(Number);
@@ -87,45 +143,53 @@ export function MeetingForm({ meeting, onCancel }) {
 
     const startDate = new Date(values.date);
     startDate.setHours(startHours, startMinutes);
-    const formattedStartDate = startDate.toISOString(); //  Convert to ISO 8601
+
+    const formattedStartDate = startDate.toISOString();
 
     const endDate = new Date(values.date);
     endDate.setHours(endHours, endMinutes);
     const formattedEndDate = endDate.toISOString();
 
-    const participants = values.participants // && Array.isArray(values.participants)
-      ? values.participants.split(",").map((p) => p.trim()) // Ensuring the participants is an Array
+
+    const participants = values.participants
+      ? values.participants.split(",").map((p) => p.trim())
       : [];
 
     const meetingData = {
       title: values.title,
       description: values.description || "",
-      date: formattedStartDate, // Ensure format is in ISO string 
+      date: formattedStartDate,
       endTime: formattedEndDate,
       location: values.location || "",
       calendar: values.calendar,
       status: "upcoming",
       participants,
-      companionSelection: "Dexter",
-    };
-    console.log("Meeting Data sent to Backend:", meetingData);
 
+      // Here we send the selected companion's identifier
+      companion: selectedCompanion ? selectedCompanion._id : null,
+    };
+    console.log("Selected Companion ID", selectedCompanion?._id);
+    console.log("Meeting Data sent to Backend:", meetingData);
+  
     if (isEditing) {
       //Dispatch the update action with meeting id and updated data 
-      dispatch(updateMeetingThunk({ meetingId: meeting._id, updateData: meetingData }));
+      dispatch(
+        updateMeetingThunk({ meetingId: meeting._id, updateData: meetingData })
+      );
     } else {
       // Dispatch the create action with the new meeting data
       dispatch(createMeeting(meetingData)).then(() => {
         dispatch(fetchUpcomingMeetings());
-      })
+      });
     }
-
+    localStorage.removeItem("meetingFormDraft"); // remove drafted form
     onCancel(); // Call onCancel prop to reset form/UI
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {/* Meeting Title */}
         <FormField
           control={form.control}
           name="title"
@@ -140,6 +204,7 @@ export function MeetingForm({ meeting, onCancel }) {
           )}
         />
 
+        {/* Meeting Description */}
         <FormField
           control={form.control}
           name="description"
@@ -147,72 +212,107 @@ export function MeetingForm({ meeting, onCancel }) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Tell your AI Compagnion what the meeting is going to be about" {...field} />
+
+                <Textarea
+                  placeholder="Tell your AI Companion what the meeting is about"
+                  {...field}
+                />
+
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Companion Selection Section */}
+        <div className="border rounded p-4">
+          <h3 className="text-lg font-semibold">Selected Companion</h3>
+          {selectedCompanion ? (
+            <p className="font-bold">
+              You have selected:{" "}
+              <span className="font-bold">{selectedCompanion.name}</span>
+            </p>
+          ) : (
+            <p className="text-muted-foreground">
+              No companion selected yet.
+            </p>
+          )}
+          <Button
+            variant="outline"
+            className="mt-2"
+            onClick={handleSelectCompanion}
+          >
+            Select
+          </Button>
+        </div>
+
+        {/* Meeting Date and Calendar */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="mt-2">
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="pb-1.5">Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="pb-1.5">Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value
+                            ? format(field.value, "PPP")
+                            : <span>Pick a date</span>}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <div className="">
-          <FormField 
-            control={form.control}
-            name="calendar"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Calendar</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a calendar" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {data.calendars.flatMap((calendar) =>
-                      calendar.items.map((item) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="calendar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Calendar</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a calendar" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {data.calendars.flatMap((calendar) =>
+                        calendar.items.map((item) => (
+                          <SelectItem key={item} value={item}>
+                            {item}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
 
@@ -260,8 +360,7 @@ export function MeetingForm({ meeting, onCancel }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Location
-                <span className="ml-1 italic test-sm text-muted-foreground">(optional)</span>
+                Location <span className="ml-1 italic text-sm text-muted-foreground">(optional)</span>
               </FormLabel>
               <FormControl>
                 <div className="flex items-center">
@@ -280,8 +379,7 @@ export function MeetingForm({ meeting, onCancel }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Participants
-                <span className= "ml-1 italic text-sm text-muted-foreground">(optional)</span>
+                Participants <span className="ml-1 italic text-sm text-muted-foreground">(optional)</span>
               </FormLabel>
               <FormControl>
                 <div className="flex items-center">
@@ -302,9 +400,10 @@ export function MeetingForm({ meeting, onCancel }) {
           <Button type="submit">{isEditing ? "Update Meeting" : "Create Meeting"}</Button>
         </div>
       </form>
-      <p className="footer-text">TΞAMLYSE Helpers can make mistakes. Consider checking important
-      information.</p>
+
+      <p className="footer-text">
+        TΞAMLYSE Helpers can make mistakes. Consider checking important information.
+      </p>
     </Form>
   );
 }
-

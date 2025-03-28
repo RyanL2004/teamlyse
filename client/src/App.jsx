@@ -11,6 +11,8 @@ import ChatbotUI from "./pages/ChatbotUI";
 import UserProvider from "./context/UserProvider";
 import MyCalendar from "./components/dashboard-component/MyCalendar";
 import MyHistory from "./components/dashboard-component/MyHistory";
+import CompanionSelection from "./components/dashboard-component/AICompanionSelection";
+
 function App() {
   return (
     <UserProvider>
@@ -34,6 +36,8 @@ function App() {
         <Route path="/debriefing" element={<ChatbotUI />} />
         <Route path="/calendar" element={<MyCalendar />} />
         <Route path="/history" element={<MyHistory />} />
+        <Route path="/select-companion" element={<CompanionSelection />} />
+        
         {/* Remove pet selection related routes if not needed */}
       </Routes>
     </UserProvider>
