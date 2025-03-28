@@ -72,6 +72,7 @@ app.use("/api/meetings", meetingRoute);
 // Companion Route 
 app.use("/api/companions", companionRoute);
 
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -28,6 +28,7 @@ export const createMeeting = async (req, res) => {
         console.log("Request Body:", req.body); // Check req
         console.log("Authentificated User:", req.user); // Check if User is autheticated
 
+
         const { title, date, endTime, location, calendar, status, participants, companion } = req.body
 
         if(!title || !date || !endTime || !calendar || !companion) {

@@ -96,13 +96,7 @@ function DashboardContent() {
     if (removeDraft) {
       localStorage.removeItem("meetingFormDraft")
     }
-
-
-    //Remove the localStorage draft:
-    // localStorage.removeItem("meetingFormDraft")
-
   };
-  
 
   return (
     <SidebarInset>

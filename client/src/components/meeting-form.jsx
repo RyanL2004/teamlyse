@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { createMeeting, updateMeetingThunk, fetchUpcomingMeetings } from "@/store/meetingsSlice";
 
+
 // Define your schema
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -49,6 +50,7 @@ const formSchema = z.object({
 });
 
 export function MeetingForm({ meeting, onCancel }) {
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -95,6 +97,7 @@ export function MeetingForm({ meeting, onCancel }) {
     console.error('Invalid meeting draft in localStorage:', error);
   }
 
+
   // Set up the form defaults
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -124,6 +127,7 @@ export function MeetingForm({ meeting, onCancel }) {
         },
   });
 
+
       // Save form input persistance
       useEffect(() => {
         const subscription = form.watch((values) => {
@@ -139,11 +143,13 @@ export function MeetingForm({ meeting, onCancel }) {
 
     const startDate = new Date(values.date);
     startDate.setHours(startHours, startMinutes);
+
     const formattedStartDate = startDate.toISOString();
 
     const endDate = new Date(values.date);
     endDate.setHours(endHours, endMinutes);
     const formattedEndDate = endDate.toISOString();
+
 
     const participants = values.participants
       ? values.participants.split(",").map((p) => p.trim())
@@ -158,24 +164,26 @@ export function MeetingForm({ meeting, onCancel }) {
       calendar: values.calendar,
       status: "upcoming",
       participants,
+
       // Here we send the selected companion's identifier
       companion: selectedCompanion ? selectedCompanion._id : null,
     };
     console.log("Selected Companion ID", selectedCompanion?._id);
-
     console.log("Meeting Data sent to Backend:", meetingData);
   
     if (isEditing) {
+      //Dispatch the update action with meeting id and updated data 
       dispatch(
         updateMeetingThunk({ meetingId: meeting._id, updateData: meetingData })
       );
     } else {
+      // Dispatch the create action with the new meeting data
       dispatch(createMeeting(meetingData)).then(() => {
         dispatch(fetchUpcomingMeetings());
       });
     }
-    localStorage.removeItem("meetingFormDraft"); // remove it 
-    onCancel();
+    localStorage.removeItem("meetingFormDraft"); // remove drafted form
+    onCancel(); // Call onCancel prop to reset form/UI
   }
 
   return (
@@ -204,10 +212,12 @@ export function MeetingForm({ meeting, onCancel }) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
+
                 <Textarea
                   placeholder="Tell your AI Companion what the meeting is about"
                   {...field}
                 />
+
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -390,6 +400,7 @@ export function MeetingForm({ meeting, onCancel }) {
           <Button type="submit">{isEditing ? "Update Meeting" : "Create Meeting"}</Button>
         </div>
       </form>
+
       <p className="footer-text">
         TΞAMLYSE Helpers can make mistakes. Consider checking important information.
       </p>

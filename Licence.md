@@ -13,5 +13,5 @@ The Software is provided "as is," without warranty of any kind, express or impli
 
 ## Contact
 
-For permissions or inquiries, please contact: [Email Me](mailto:rayanlouahche2004@gmail.com)
+For permissions to collaborate or general inquiries, please contact: [Email Me](mailto:rayanlouahche2004@gmail.com)
 
