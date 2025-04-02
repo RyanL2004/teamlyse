@@ -58,7 +58,7 @@ export const deleteMeetingThunk = createAsyncThunk (
     async (meetingId, thunkAPI) => {
         try{ 
             await deleteMeetingAPI (meetingId);
-
+            
             //return the meetingId so we can remove it from the state 
             return meetingId
         }
@@ -159,11 +159,19 @@ const meetingsSlice = createSlice({
 
         //Update meeting 
         .addCase(updateMeetingThunk.fulfilled, (state, action) => {
+            const updatedMeeting = action.payload
+
             const index = state.meetings.findIndex(
-                (meeting) => meeting._id === action.payload
+                (meeting) => meeting._id === updatedMeeting._id
             );
             if (index !== -1) {
                 state.meetings[index] = action.payload;
+            }
+            try {
+                localStorage.setItem("meetings", JSON.stringify(state.meetings)); // Persisting the new state 
+            }
+            catch (error) {
+                console.error('Failed Updating Meeting from localStorage', error)
             }
         })
 
@@ -173,7 +181,14 @@ const meetingsSlice = createSlice({
             state.meetings = state.meetings.filter(
                 (meeting) => meeting._id !== action.payload
             );
+            try {
+                localStorage.setItem("meetings", JSON.stringify(state.meetings)); // Persisting the new state 
+            }
+            catch (error) {
+                console.error("Failed to update localStorage after meeting deletion", error);
+            }
         });
+        
     },
 });
 

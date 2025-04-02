@@ -17,29 +17,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-
+import { Play } from "lucide-react";
+import { Link } from "react-router-dom";
 // State Management Imports:
 import { useDispatch } from "react-redux";
 import { deleteMeetingThunk } from "@/store/meetingsSlice";
 import { useSelector } from "react-redux";
- 
+
 export function MeetingList({ setSelectedMeeting, selectedDate }) {
-  // Get meetings from Redux 
-  const meetings = useSelector((state) => state.meetings.meetings) 
-  console.log("Meetings in Redux Store:", meetings); 
+  // Get meetings from Redux
+  const meetings = useSelector((state) => state.meetings.meetings);
+  console.log("Meetings in Redux Store:", meetings);
 
   const dispatch = useDispatch();
 
   // Filter meetings by selected date if provided, converting meeting.date to a Date object.
-  const filteredMeetings = selectedDate 
-    ? meetings.filter((meeting) => isSameDay(new Date(meeting.date), selectedDate))
+  const filteredMeetings = selectedDate
+    ? meetings.filter((meeting) =>
+        isSameDay(new Date(meeting.date), selectedDate)
+      )
     : meetings;
 
   // Sort meetings by date (ascending), ensuring meeting.date is a Date object.
-  const sortedMeetings = [...filteredMeetings].filter(meeting => 
-    meeting.date && !isNaN(new Date(meeting.date))
-  ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
+  const sortedMeetings = [...filteredMeetings]
+    .filter((meeting) => meeting.date && !isNaN(new Date(meeting.date)))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   // Group meetings by date (again, converting to Date).
   const meetingsByDate = sortedMeetings.reduce((acc, meeting) => {
@@ -73,7 +75,10 @@ export function MeetingList({ setSelectedMeeting, selectedDate }) {
         <h3 className="text-lg font-medium">No meetings found</h3>
         <p className="text-sm text-muted-foreground mt-1">
           {selectedDate
-            ? `No meetings scheduled for ${format(selectedDate, "MMMM d, yyyy")}`
+            ? `No meetings scheduled for ${format(
+                selectedDate,
+                "MMMM d, yyyy"
+              )}`
             : "No upcoming meetings scheduled"}
         </p>
       </div>
@@ -97,32 +102,49 @@ export function MeetingList({ setSelectedMeeting, selectedDate }) {
                       <CardTitle className="text-lg">{meeting.title}</CardTitle>
                       <CardDescription className="flex items-center">
                         <Clock className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
-                        {meeting.date && !isNaN(new Date(meeting.date)) ? format(new Date(meeting.date), "h:mm a") : "Invalid Date"} -{" "}
-                        {meeting.endTime && !isNaN(new Date(meeting.endTime)) ? format(new Date(meeting.endTime), "h:mm a") : "Invalid Date"}
-
+                        {meeting.date && !isNaN(new Date(meeting.date))
+                          ? format(new Date(meeting.date), "h:mm a")
+                          : "Invalid Date"}{" "}
+                        -{" "}
+                        {meeting.endTime && !isNaN(new Date(meeting.endTime))
+                          ? format(new Date(meeting.endTime), "h:mm a")
+                          : "Invalid Date"}
                       </CardDescription>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Badge variant="outline" className="capitalize">
                         {meeting.calendar}
                       </Badge>
-                      <div className={`h-2.5 w-2.5 rounded-full ${getStatusColor(meeting.status)}`} />
+
+                      <div
+                        className={`h-2.5 w-2.5 rounded-full ${getStatusColor(
+                          meeting.status
+                        )}`}
+                      />
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Open menu</span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setSelectedMeeting(meeting)}>
+                          <DropdownMenuItem
+                            onClick={() => setSelectedMeeting(meeting)}
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-600"
                             // Unique Fingerprint: 10RLAO01YU04
-                            onClick={() => dispatch(deleteMeetingThunk(meeting._id))}
+                            onClick={() =>
+                              dispatch(deleteMeetingThunk(meeting._id))
+                            }
                           >
                             <Trash className="mr-2 h-4 w-4" />
                             Delete
@@ -137,17 +159,35 @@ export function MeetingList({ setSelectedMeeting, selectedDate }) {
                     <p className="text-sm">{meeting.description}</p>
                   </CardContent>
                 )}
-                <CardFooter className="pt-0 text-xs text-muted-foreground">
-                  {meeting.location && (
-                    <div className="flex items-center mr-4">
-                      <span>📍 {meeting.location}</span>
-                    </div>
-                  )}
-                  {meeting.participants.length > 0 && (
-                    <div className="flex items-center">
-                      <span>👥 {meeting.participants.length} participants</span>
-                    </div>
-                  )}
+                <CardFooter className="pt-0 text-xs text-muted-foreground flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    {meeting.location && (
+                      <div className="flex items-center">
+                        <span>📍 {meeting.location}</span>
+                      </div>
+                    )}
+                    {meeting.participants.length > 0 && (
+                      <div className="flex items-center">
+                        <span>
+                          👥 {meeting.participants.length} participants
+                        </span>
+                      </div>
+                    )}
+                    {meeting.companion && (
+                      <div className="flex items-center">
+                        <span>⚡ {meeting.companion.name}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <Link to="/debriefing">
+                    <Button
+                      className="text-white flex items-center"
+                      variant="ghost"
+                    >
+                      <Play className="w-4 h-4" />Start Meeting
+                    </Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}

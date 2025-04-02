@@ -67,7 +67,7 @@ export async function updateMeeting( meetingId, updateData ) {
         });
 
         if (!response.ok) {
-            throw new Error ('Failder to update the meeting')
+            throw new Error ('Failed to update the meeting')
         };
 
         return await response.json();
@@ -83,7 +83,7 @@ export async function updateMeeting( meetingId, updateData ) {
 export async function deleteMeeting (meetingId) {
     try {
 
-        const response = fetch (`${API_URL}/api/meetings/${meetingId}`, {
+        const response = await fetch (`${API_URL}/api/meetings/${meetingId}`, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -93,7 +93,7 @@ export async function deleteMeeting (meetingId) {
         });
 
         if (!response.ok) {
-            throw new Error ('Failder to delete the chosen meeting');
+            throw new Error ('Failed to delete the chosen meeting');
         }
 
         return await response.json();

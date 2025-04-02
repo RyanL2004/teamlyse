@@ -9,7 +9,7 @@ export const getUpcomingMeetings = async (req, res) => {
         const meetings = await Meeting.find({
             user: req.user._id,
             date: { $gte: new Date() } //Ensure correct field name 
-        }).sort({ date: 1 }); // Use `date` instead of scheduledTime here
+        }).sort({ date: 1 }).populate('companion'); // Use `date` instead of scheduledTime here
         
         console.log("fetched meetings:", meetings);
 
