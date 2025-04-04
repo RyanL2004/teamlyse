@@ -24,25 +24,9 @@ import {
 import { loadCompanions, hydrateSelectedCompanion, setSelectedCompanionId } from "../store/companionsSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { hollowKnight } from "@/components/dashboard-component/AICompanionSelection"
+import createHollowKnight from "./3DAnimatedCharacter";
 
-// Placeholder function - replace with your actual 3D model loading logic
-const loadCompanionModel = (modelPath, scene) => {
-  // This is a placeholder cube - replace with your actual model loading code
-  const geometry = new THREE.BoxGeometry(1, 1, 1)
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x6366f1,
-    metalness: 0.5,
-    roughness: 0.5,
-  })
-  const cube = new THREE.Mesh(geometry, material)
-  scene.add(cube)
-
-  // Return the model reference and any animation mixer
-  return {
-    model: cube,
-    mixer: null,
-  }
-}
 
 const MeetingCompanion = ({ onClose }) => {
   // State for UI
@@ -74,13 +58,52 @@ const MeetingCompanion = ({ onClose }) => {
   const location = useLocation();
   const navigate = useNavigate(); 
 
-  const companionFromForm = location.state?.selectedCompanion
+  const meetingId = location.state?.meetingId;
+  const { meetings } = useSelector((state) => state.meetings);
 
-  const { companionsList, selectedCompanionId } = useSelector((state => state.companions));
-  
-  const selectedCompanion = companionsList.find((comp) => {comp._id === selectedCompanionId}) || companionFromForm || null;
+  //Find the meeting from Redux
+  const meeting = meetings.find((m) => m._id === meetingId);
+  // The embedded companion object is here if the server includes it
+  const selectedCompanion = meeting?.companion;
 
-  // Look up for the ull companion object ID using : 
+
+  // Placeholder function - replace with your actual 3D model loading logic
+const loadCompanionModel = (modelPath, scene) => {
+
+
+ // Based on ModelUrl 
+ let object3D;
+ if (selectedCompanion?.modelUrl === "hollowKnight") {
+  object3D = createHollowKnight();
+ }
+ else {
+  // Fallback to a default placeholder cube
+  const geometry = new THREE.BoxGeometry(1, 1, 1)
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x6366f1,
+    metalness: 0.5,
+    roughness: 0.5,
+  })
+  const cube = new THREE.Mesh(geometry, material)
+  scene.add(cube)
+
+  // Return the model reference and any animation mixer
+  return {
+    model: cube,
+    mixer: null,
+  }
+ }
+ 
+  scene.add(object3D);
+
+  // return references 
+  return { 
+    model: object3D,
+    mixer: null
+  }
+
+ 
+}
 
   // Mock data for transcript
   const mockTranscript = [
@@ -157,7 +180,7 @@ const MeetingCompanion = ({ onClose }) => {
     scene.add(pointLight)
 
     // Load 3D model
-    const modelPath = selectedCompanion?.modelPath
+    const modelPath = selectedCompanion?.modelUrl
     const { model, mixer } = loadCompanionModel(modelPath, scene)
     modelRef.current = model
     mixerRef.current = mixer
@@ -188,6 +211,11 @@ const MeetingCompanion = ({ onClose }) => {
       // Update mixer if it exists
       if (mixerRef.current) {
         mixerRef.current.update(clockRef.current.getDelta())
+      }
+
+      // Only rotate model if it exists 
+      if (modelRef.current instanceof THREE.Object3D) {
+        modelRef.current.rotation.y += 0.005;
       }
 
       // Add gentle floating animation

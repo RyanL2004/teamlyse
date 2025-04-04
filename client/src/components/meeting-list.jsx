@@ -180,7 +180,9 @@ export function MeetingList({ setSelectedMeeting, selectedDate }) {
                     )}
                   </div>
 
-                  <Link to="/debriefing">
+                  <Link to="/debriefing"
+                    state={{ meetingId: meeting._id }} // Pass the meeting Id when navigating
+                  >
                     <Button
                       className="text-white flex items-center"
                       variant="ghost"
