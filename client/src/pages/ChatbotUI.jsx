@@ -67,43 +67,74 @@ const MeetingCompanion = ({ onClose }) => {
   const selectedCompanion = meeting?.companion;
 
 
-  // Placeholder function - replace with your actual 3D model loading logic
-const loadCompanionModel = (modelPath, scene) => {
 
 
- // Based on ModelUrl 
- let object3D;
- if (selectedCompanion?.modelUrl === "hollowKnight") {
-  object3D = createHollowKnight();
- }
- else {
-  // Fallback to a default placeholder cube
-  const geometry = new THREE.BoxGeometry(1, 1, 1)
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x6366f1,
-    metalness: 0.5,
-    roughness: 0.5,
-  })
-  const cube = new THREE.Mesh(geometry, material)
-  scene.add(cube)
+  function loadCompanionModel(companion, scene) {
+    // Clone the base model
+    const model = createHollowKnight().clone();
+  
+    // Apply companion-specific properties
+    model.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material = child.material.clone(); // clone the material to avoid shared state
+        child.material.color.set(companion.color || "#6366f1");
+      }
+    });
+  
+    if (companion.position) {
+      model.position.set(...companion.position);
+    }
+  
+    if (companion.scale) {
+      model.scale.set(companion.scale, companion.scale, companion.scale);
+    }
+    
+    if (companion.rotation) {
+      model.rotation.set(...companion.rotation);
+    }
+    
 
-  // Return the model reference and any animation mixer
-  return {
-    model: cube,
-    mixer: null,
+    scene.add(model);
+  
+    return {
+      model,
+      mixer: null,
+    };
   }
- }
- 
-  scene.add(object3D);
 
-  // return references 
-  return { 
-    model: object3D,
-    mixer: null
+  function fitCameraToModel(camera, model) {
+    const scene = sceneRef.current;
+    const container = companionContainerRef.current;
+    if (!scene || !model || !container) return;
+  
+    // Remove model if already in scene to avoid duplicates
+    scene.remove(model);
+  
+    // Center the model based on its bounding box
+    const box = new THREE.Box3().setFromObject(model);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+  
+    model.position.sub(center);
+    scene.add(model);
+  
+    // Camera sizing
+    const aspect = container.clientWidth / container.clientHeight;
+    camera.aspect = aspect;
+    camera.updateProjectionMatrix();
+  
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const fov = camera.fov * (Math.PI / 180);
+    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+    cameraZ *= 1.5;
+  
+    camera.position.set(0, 0, cameraZ);
+    camera.lookAt(0, 0, 0);
   }
-
- 
-}
+  
+  
+  
+  
 
   // Mock data for transcript
   const mockTranscript = [
@@ -181,9 +212,14 @@ const loadCompanionModel = (modelPath, scene) => {
 
     // Load 3D model
     const modelPath = selectedCompanion?.modelUrl
-    const { model, mixer } = loadCompanionModel(modelPath, scene)
+    const { model, mixer } = loadCompanionModel(selectedCompanion, scene)
     modelRef.current = model
     mixerRef.current = mixer
+
+    
+// Auto-center and scale to fit in view
+fitCameraToModel(camera, model);
+
 
     // Add orbit controls
     const controls = new OrbitControls(camera, renderer.domElement)
@@ -194,15 +230,29 @@ const loadCompanionModel = (modelPath, scene) => {
     controls.rotateSpeed = 0.5
 
     // Handle window resize
-    const handleResize = () => {
-      if (!companionContainerRef.current) return
-
-      camera.aspect = companionContainerRef.current.clientWidth / companionContainerRef.current.clientHeight
-      camera.updateProjectionMatrix()
-
-      renderer.setSize(companionContainerRef.current.clientWidth, companionContainerRef.current.clientHeight)
-    }
-    window.addEventListener("resize", handleResize)
+      let resizeTimeout;
+    
+      const handleResize = () => {
+        if (!companionContainerRef.current || !cameraRef.current || !modelRef.current || !rendererRef.current) return;
+    
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          const container = companionContainerRef.current;
+          const camera = cameraRef.current;
+          const renderer = rendererRef.current;
+          const model = modelRef.current;
+    
+          camera.aspect = container.clientWidth / container.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(container.clientWidth, container.clientHeight);
+    
+          fitCameraToModel(camera, model);
+        }, 100);
+      };
+    
+      
+    
+    
 
     // Animation loop
     const animate = () => {
@@ -212,17 +262,20 @@ const loadCompanionModel = (modelPath, scene) => {
       if (mixerRef.current) {
         mixerRef.current.update(clockRef.current.getDelta())
       }
-
+      
       // Only rotate model if it exists 
       if (modelRef.current instanceof THREE.Object3D) {
         modelRef.current.rotation.y += 0.005;
       }
-
+      
+      /*
       // Add gentle floating animation
       if (modelRef.current) {
         modelRef.current.rotation.y += 0.005
         modelRef.current.position.y = Math.sin(Date.now() * 0.001) * 0.1
       }
+        */
+      
 
       controls.update()
       renderer.render(scene, camera)
