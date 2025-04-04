@@ -401,7 +401,7 @@ export function MeetingForm({ meeting, onCancel }) {
         </div>
       </form>
 
-      <p className="footer-text">
+      <p className="text-sm text-muted-foreground mt-4 flex justify-center">
         TΞAMLYSE Helpers can make mistakes. Consider checking important information.
       </p>
     </Form>
