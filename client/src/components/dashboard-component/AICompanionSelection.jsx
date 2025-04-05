@@ -63,11 +63,13 @@ function CompanionModel({ companion, isActive }) {
   }, [companion.model, gltf]);
   */
 
+
   //Use memoized model only if its a local imported model
   const sceneObject = useMemo(() => {
     // Check the modelUrl to inject the appropriate local model
     if (companion.modelUrl === "hollowKnight") {
       return createHollowKnight().clone();
+
     }
     return null;
   }, [companion.modelUrl]);
@@ -155,8 +157,9 @@ function CompanionCard({ companion, isSelected }) {
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 text-sm text-neutral-600 flex items-center gap-2"
           >
-            <Check size={16} className="text-neutral-400" /> Selected as your
-            meeting companion
+
+            <Check size={16} className="text-neutral-400"  /> Selected as your meeting companion
+
           </motion.div>
         )}
       </CardContent>
@@ -176,6 +179,7 @@ export default function CompanionSelection({ onSelectCompanion }) {
   const [autoRotate, setAutoRotate] = useState(true);
   const controlsRef = useRef();
   const [buttonHovered, setButtonHovered] = useState(false);
+
 
   const selectedCompanionId = useSelector(
     (state) => state.companions.selectedCompanionId
@@ -206,6 +210,7 @@ export default function CompanionSelection({ onSelectCompanion }) {
       console.log("Selected Companion:", currentCompanion._id);
       // Save the selected companion's ID to Redux
       dispatch(setSelectedCompanionId(currentCompanion._id));
+
       localStorage.setItem("selectedCompanionId", currentCompanion._id);
       // Optionally, navigate back to the meeting creation route
       // Here we assume the meeting form is part of the calendar route
@@ -388,12 +393,15 @@ export default function CompanionSelection({ onSelectCompanion }) {
               <Button
                 variant="outline"
                 size="icon"
+
                 className="h-12 w-12 rounded-full bg-black/30 border-white/10 hover:bg-white/10"
+
                 onClick={handlePrevious}
               >
                 <ChevronLeft size={24} />
               </Button>
               <Button
+
                 className="px-8 py-6 text-lg font-medium rounded-full shadow-lg transition-all"
                 onMouseEnter={() => setButtonHovered(true)}
                 onMouseLeave={() => setButtonHovered(false)}
@@ -412,6 +420,7 @@ export default function CompanionSelection({ onSelectCompanion }) {
                   ? "Selected"
                   : "Choose This Companion"}
               </Button>
+
 
               <Button
                 variant="outline"

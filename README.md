@@ -69,10 +69,11 @@
 - [API Documentation](https://api.meeting-companion.example.com/docs)
 - [Contributing Guidelines](https://github.com/RyanL2004/meeting-companion/blob/main/CONTRIBUTING.md)
 
+<!--
 ## 👥 Contributors
 
 We welcome contributions! If you're interested in helping improve AI Meeting Companion, please see our [Contributing Guidelines](https://github.com/RyanL2004/meeting-companion/blob/main/CONTRIBUTING.md).
-
+-->
 ## 📄 License
 
 This project is licensed under a Proprietary License ⚠️.
