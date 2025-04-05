@@ -63,11 +63,13 @@ function CompanionModel({ companion, isActive }) {
   }, [companion.model, gltf]);
   */
 
-  //Use memoized model only if its a local imported model 
+
+  //Use memoized model only if its a local imported model
   const sceneObject = useMemo(() => {
     // Check the modelUrl to inject the appropriate local model
     if (companion.modelUrl === "hollowKnight") {
-      return  createHollowKnight().clone();
+      return createHollowKnight().clone();
+
     }
     return null;
   }, [companion.modelUrl]);
@@ -155,7 +157,9 @@ function CompanionCard({ companion, isSelected }) {
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 text-sm text-neutral-600 flex items-center gap-2"
           >
+
             <Check size={16} className="text-neutral-400"  /> Selected as your meeting companion
+
           </motion.div>
         )}
       </CardContent>
@@ -174,6 +178,8 @@ export default function CompanionSelection({ onSelectCompanion }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoRotate, setAutoRotate] = useState(true);
   const controlsRef = useRef();
+  const [buttonHovered, setButtonHovered] = useState(false);
+
 
   const selectedCompanionId = useSelector(
     (state) => state.companions.selectedCompanionId
@@ -204,14 +210,15 @@ export default function CompanionSelection({ onSelectCompanion }) {
       console.log("Selected Companion:", currentCompanion._id);
       // Save the selected companion's ID to Redux
       dispatch(setSelectedCompanionId(currentCompanion._id));
-      localStorage.setItem("selectedCompanionId", currentCompanion._id);      
+
+      localStorage.setItem("selectedCompanionId", currentCompanion._id);
       // Optionally, navigate back to the meeting creation route
       // Here we assume the meeting form is part of the calendar route
       navigate("/calendar", {
-        state: { 
+        state: {
           selectedCompanion: currentCompanion,
           resumeForm: true,
-         },
+        },
       });
     }
   };
@@ -386,16 +393,26 @@ export default function CompanionSelection({ onSelectCompanion }) {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-12 w-12 rounded-full bg-black/30 border-white/10 hover:bg-black/50"
+
+                className="h-12 w-12 rounded-full bg-black/30 border-white/10 hover:bg-white/10"
+
                 onClick={handlePrevious}
               >
                 <ChevronLeft size={24} />
               </Button>
               <Button
-                className="px-8 py-6 text-lg font-medium rounded-full shadow-lg"
+
+                className="px-8 py-6 text-lg font-medium rounded-full shadow-lg transition-all"
+                onMouseEnter={() => setButtonHovered(true)}
+                onMouseLeave={() => setButtonHovered(false)}
                 style={{
-                  background: `linear-gradient(135deg, ${currentCompanion.color}, ${currentCompanion.color}99)`,
-                  boxShadow: `0 0 20px ${currentCompanion.color}50`,
+                  background: buttonHovered
+                    ? `linear-gradient(135deg, ${currentCompanion.color}cc, ${currentCompanion.color}88)`
+                    : `linear-gradient(135deg, ${currentCompanion.color}, ${currentCompanion.color}99)`,
+                  // You can increase or decrease the blur/spread for a stronger effect on hover
+                  boxShadow: buttonHovered
+                    ? `0 0 150px ${currentCompanion.color}80`
+                    : `0 0 100px ${currentCompanion.color}50`,
                 }}
                 onClick={handleSelect}
               >
@@ -403,10 +420,12 @@ export default function CompanionSelection({ onSelectCompanion }) {
                   ? "Selected"
                   : "Choose This Companion"}
               </Button>
+
+
               <Button
                 variant="outline"
                 size="icon"
-                className="h-12 w-12 rounded-full bg-black/30 border-white/10 hover:bg-black/50"
+                className="h-12 w-12 rounded-full bg-black/30 border-white/10 hover:bg-white/10"
                 onClick={handleNext}
               >
                 <ChevronRight size={24} />
