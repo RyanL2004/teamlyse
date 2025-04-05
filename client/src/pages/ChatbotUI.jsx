@@ -20,6 +20,8 @@ import {
   X,
   Maximize2,
   Minimize2,
+  Command,
+  Podcast,
 } from "lucide-react"
 import { loadCompanions, hydrateSelectedCompanion, setSelectedCompanionId } from "../store/companionsSlice";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -38,6 +40,7 @@ const MeetingCompanion = ({ onClose }) => {
   const [messages, setMessages] = useState([])
   const [transcript, setTranscript] = useState([])
   const [insights, setInsights] = useState([])
+  const [commands, setCommands] = useState([])
   const [meetingDuration, setMeetingDuration] = useState(0)
   const [inputValue, setInputValue] = useState("")
 
@@ -212,6 +215,10 @@ function fitCameraToModel(camera, model) {
   
 
   // Mock data for transcript
+  //Future Proof Mock proper Participants data for each meeting ( Maybe through creating a new back-end API endpoint )
+  const meetingParticipantsTranscript = meeting?.participants.length === 2 ? (
+    meeting.participants.map((participant) => participant.name)
+  ) : (meetingParticipants  = meeting.participants.map((participant) => participant.name).slice(0, 2));
   const mockTranscript = [
     {
       id: 1,
@@ -234,11 +241,21 @@ function fitCameraToModel(camera, model) {
     },
   ]
 
+
   // Mock data for insights
   const mockInsights = [
     { id: 1, type: "key_point", text: "User onboarding has a 23% drop-off rate", time: "00:01:45" },
     { id: 2, type: "action_item", text: "Review payment information page design", time: "00:02:30" },
     { id: 3, type: "question", text: "What specific screens have the highest drop-off rates?", time: "00:02:10" },
+    
+  ]
+
+  // Mock data for commands
+  const mockCommands = [
+    { id: 1, type: `Actionise`, prompt: "Provide current identified Action Items to the user", text:`The "Action" command tells ${meeting.companion.name} to provide the current meeting's action items.`},
+    { id: 2, type: `Summarise`, prompt: "Provide current meeting Summary to the user", text:`The "Summary" command tells ${meeting.companion.name} to provide the current meeting summary.`} ,
+    { id: 3, type: `Questions`, prompt: "Provide current Questions addressed in the meeting", text:`The "Question" command tells ${meeting.companion.name} to provide with the most important questions that needs to be address from the ongoing meeting.`} ,
+    { id: 4, type: `Answer`, prompt: "Provide an Answer to the last question asked", text: `The "Answer" command tells ${meeting.companion.name} to provide an answer to the last question asked.`},
   ]
 
   // Initialize 3D scene
@@ -646,6 +663,17 @@ fitCameraToModel(camera, model);
                 </div>
               </button>
 
+            <div className="flex border-b border-white/10">
+            <button
+              onClick={() => setActiveTab("commands")}
+              className={`px-4 py-3 text-sm font-medium ${activeTab === "commands" ? "text-primary border-b-2 border-primary" : "text-white/60 hover:text-white/80"}`}>
+                <div className="flex items-center gap-2">
+                  <Podcast className="w-4 h-4" />
+                  AI Commands
+                </div>
+              </button>
+            </div>
+
               <button
                 onClick={() => setActiveTab("transcript")}
                 className={`px-4 py-3 text-sm font-medium ${activeTab === "transcript" ? "text-primary border-b-2 border-primary" : "text-white/60 hover:text-white/80"}`}
@@ -691,7 +719,7 @@ fitCameraToModel(camera, model);
                         <div
                           className={`max-w-[80%] rounded-lg p-3 ${
                             message.sender === "user"
-                              ? "bg-primary text-white"
+                              ? "bg-primary text-neutral-950"
                               : message.sender === "system"
                                 ? "bg-gray-500/20 text-white/80 text-sm italic"
                                 : "bg-white/10 text-white"
@@ -705,6 +733,35 @@ fitCameraToModel(camera, model);
                       </div>
                     ))}
                     <div ref={messagesEndRef} />
+                  </motion.div>
+                )}
+
+                {activeTab === "commands" && (
+                  <motion.div
+                    key="commands"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0}}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-4"
+                    >
+                      {mockCommands.length === 0 ? (
+                        <div className="text-center py-8 text-white/60">
+                          <Command className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                          <p>No commands available yet.</p>
+                        </div>
+                      ) : (
+                        mockCommands.map((command) => (
+                          <div key={command.id} className="flex gap-3">
+                            <div className="flex-shrink-0 w-16 text-l text-white/60 mr-3">{command.type}</div>
+                            <div className="flex-1">
+                              <div className="text-white">{command.text}</div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                      
+                      
+
                   </motion.div>
                 )}
 
@@ -793,7 +850,7 @@ fitCameraToModel(camera, model);
                   <button
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim()}
-                    className="p-2 rounded-lg bg-primary text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg bg-muted-foreground text-neutral-950 disabled:opacity-50 disabled:cursor-not-allowed hover: bg-muted-foreground/80 transition-colors"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
