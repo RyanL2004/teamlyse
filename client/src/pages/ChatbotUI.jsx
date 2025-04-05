@@ -26,7 +26,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { hollowKnight } from "@/components/dashboard-component/AICompanionSelection"
 import createHollowKnight from "./3DAnimatedCharacter";
-
+import { gsap } from "gsap";
 
 const MeetingCompanion = ({ onClose }) => {
   // State for UI
@@ -66,6 +66,106 @@ const MeetingCompanion = ({ onClose }) => {
   // The embedded companion object is here if the server includes it
   const selectedCompanion = meeting?.companion;
 
+  function animateCameraToPosition(camera, targetPosition, duration = 0.3) {
+    gsap.to(camera.position, {
+      x: targetPosition.x,
+      y: targetPosition.y,
+      z: targetPosition.z,
+      duration,
+      onUpdate: () => camera.updateProjectionMatrix(),
+      ease: "power2.out",
+    });
+  }
+  
+  // In your updated fitCameraToModel:
+function fitCameraToModel(camera, model) {
+  if (!model) return;
+  
+  const box = new THREE.Box3().setFromObject(model);
+  const center = new THREE.Vector3();
+  const size = new THREE.Vector3();
+  box.getCenter(center);
+  box.getSize(size);
+  
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const fov = camera.fov * (Math.PI / 180);
+  let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+  cameraZ *= 1.5;
+  
+  const targetPosition = new THREE.Vector3(center.x, center.y, cameraZ + center.z);
+
+  // Use tweening to animate to the new camera position:
+  animateCameraToPosition(camera, targetPosition);
+  
+  camera.lookAt(center);
+}
+  
+
+  let resizeTimeout;
+  const handleResize = () => {
+    console.log("Handle Resize Executing");
+    if (!companionContainerRef.current || !cameraRef.current || !modelRef.current || !rendererRef.current) return;
+
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const container = companionContainerRef.current;
+      const camera = cameraRef.current;
+      const renderer = rendererRef.current;
+      const model = modelRef.current;
+
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+
+      fitCameraToModel(camera, model);
+    }, 100);
+  };
+
+  const toggleExpand = () => {
+    setIsExpanded((prev) => !prev);
+    // Add a one-time event listener for the transition end
+    const container = companionContainerRef.current;
+    if (container) {
+      const onTransitionEnd = () => {
+        handleResize();
+        container.removeEventListener("transitionend", onTransitionEnd);
+      };
+      container.addEventListener("transitionend", onTransitionEnd);
+    }
+  };
+
+  useEffect(() => {
+    // Ensure all necessary refs are available.
+    if (!companionContainerRef.current || !cameraRef.current || !modelRef.current || !rendererRef.current) return;
+  
+    const container = companionContainerRef.current;
+    const camera = cameraRef.current;
+    const renderer = rendererRef.current;
+    const model = modelRef.current;
+  
+    // Immediately update the camera's aspect and renderer size
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  
+    // Compute the new target position for the camera based on the model
+    const box = new THREE.Box3().setFromObject(model);
+    const center = new THREE.Vector3();
+    const size = new THREE.Vector3();
+    box.getCenter(center);
+    box.getSize(size);
+  
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const fov = camera.fov * (Math.PI / 180);
+    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+    cameraZ *= 1.5;
+    const targetPosition = new THREE.Vector3(center.x, center.y, cameraZ + center.z);
+  
+    // Animate the camera position over 300ms (matching your CSS transition)
+    animateCameraToPosition(camera, targetPosition, 0.3);
+  }, [isExpanded, isSidebarOpen]);
+  
+  
 
 
 
@@ -102,35 +202,10 @@ const MeetingCompanion = ({ onClose }) => {
     };
   }
 
-  function fitCameraToModel(camera, model) {
-    const scene = sceneRef.current;
-    const container = companionContainerRef.current;
-    if (!scene || !model || !container) return;
-  
-    // Remove model if already in scene to avoid duplicates
-    scene.remove(model);
-  
-    // Center the model based on its bounding box
-    const box = new THREE.Box3().setFromObject(model);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-  
-    model.position.sub(center);
-    scene.add(model);
-  
-    // Camera sizing
-    const aspect = container.clientWidth / container.clientHeight;
-    camera.aspect = aspect;
-    camera.updateProjectionMatrix();
-  
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const fov = camera.fov * (Math.PI / 180);
-    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-    cameraZ *= 1.5;
-  
-    camera.position.set(0, 0, cameraZ);
-    camera.lookAt(0, 0, 0);
-  }
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   
   
   
@@ -140,7 +215,7 @@ const MeetingCompanion = ({ onClose }) => {
   const mockTranscript = [
     {
       id: 1,
-      speaker: "John",
+      speaker: meeting.participants[1],
       text: "I think we should focus on improving the user onboarding experience.",
       time: "00:01:23",
     },
@@ -150,7 +225,7 @@ const MeetingCompanion = ({ onClose }) => {
       text: "I agree. Our analytics show a 23% drop-off during the first-time setup.",
       time: "00:01:45",
     },
-    { id: 3, speaker: "You", text: "What specific screens have the highest drop-off rates?", time: "00:02:10" },
+    { id: 3, speaker: "Me", text: "What specific screens have the highest drop-off rates?", time: "00:02:10" },
     {
       id: 4,
       speaker: "Sarah",
@@ -215,11 +290,11 @@ const MeetingCompanion = ({ onClose }) => {
     const { model, mixer } = loadCompanionModel(selectedCompanion, scene)
     modelRef.current = model
     mixerRef.current = mixer
-
+     
+  
     
 // Auto-center and scale to fit in view
 fitCameraToModel(camera, model);
-
 
     // Add orbit controls
     const controls = new OrbitControls(camera, renderer.domElement)
@@ -229,30 +304,12 @@ fitCameraToModel(camera, model);
     controls.enablePan = false
     controls.rotateSpeed = 0.5
 
-    // Handle window resize
-      let resizeTimeout;
     
-      const handleResize = () => {
-        if (!companionContainerRef.current || !cameraRef.current || !modelRef.current || !rendererRef.current) return;
-    
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          const container = companionContainerRef.current;
-          const camera = cameraRef.current;
-          const renderer = rendererRef.current;
-          const model = modelRef.current;
-    
-          camera.aspect = container.clientWidth / container.clientHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(container.clientWidth, container.clientHeight);
-    
-          fitCameraToModel(camera, model);
-        }, 100);
-      };
-    
+
+
       
     
-    
+      
 
     // Animation loop
     const animate = () => {
@@ -271,10 +328,17 @@ fitCameraToModel(camera, model);
       /*
       // Add gentle floating animation
       if (modelRef.current) {
-        modelRef.current.rotation.y += 0.005
-        modelRef.current.position.y = Math.sin(Date.now() * 0.001) * 0.1
+        modelRef.current.position.y = Math.sin(Date.now() * 0.001) * 0.0005
       }
-        */
+      */
+
+      /*
+      // Increase gently y position of the model
+      if (modelRef.current) {
+        modelRef.current.position.y = 0.0007
+      }
+      */
+        
       
 
       controls.update()
@@ -328,12 +392,14 @@ fitCameraToModel(camera, model);
     setMessages([
       {
         id: 1,
-        sender: "companion",
+        sender: meeting.companion.name,
         text: `Hi there! I'm ${selectedCompanion?.name || "your companion"}. I'll assist you during this meeting by taking notes, identifying key points, and answering any questions you might have.`,
         timestamp: new Date(),
       },
     ])
   }, [selectedCompanion])
+
+
 
   // Auto-scroll messages
   useEffect(() => {
@@ -467,6 +533,16 @@ fitCameraToModel(camera, model);
     }
   }
 
+  //Creating a useEffect that handles and listens to resize effect events 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleResize();
+    },200); // wait a bit longer than the CSS transition duration
+    return () => clearTimeout(timer);
+  }, [isExpanded, isSidebarOpen]);
+  
+
+
   return (
     <div
       className={`fixed ${isExpanded ? "inset-0" : "bottom-4 right-4"} flex flex-col bg-black/5 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden shadow-2xl transition-all duration-300 ease-in-out z-50`}
@@ -522,12 +598,13 @@ fitCameraToModel(camera, model);
             </button>
           )}
 
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-2 rounded-full bg-white/5 text-white/80 hover:bg-white/10 transition-colors"
-          >
-            {isExpanded ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-          </button>
+<button
+  onClick={toggleExpand}
+  className="p-2 rounded-full bg-white/5 text-white/80 hover:bg-white/10 transition-colors"
+>
+  {isExpanded ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+</button>
+
 
           <button
             onClick={onClose}
@@ -550,7 +627,7 @@ fitCameraToModel(camera, model);
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/2 z-10 p-1 rounded-full bg-white/10 text-white/80 hover:bg-white/20 transition-colors"
           >
-            {isSidebarOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            {isSidebarOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4 mr-5" />}
           </button>
         </div>
 
@@ -710,7 +787,7 @@ fitCameraToModel(camera, model);
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                    placeholder="Ask your companion a question..."
+                    placeholder={`Ask ${meeting.companion.name} any questions you may have...`}
                     className="flex-1 bg-white/5 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   <button
