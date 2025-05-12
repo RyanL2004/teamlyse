@@ -22,13 +22,15 @@ import {
   Minimize2,
   Command,
   Podcast,
+  Home,
 } from "lucide-react"
 import { loadCompanions, hydrateSelectedCompanion, setSelectedCompanionId } from "../store/companionsSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { hollowKnight } from "@/components/dashboard-component/AICompanionSelection"
 import createHollowKnight from "./3DAnimatedCharacter";
 import { gsap } from "gsap";
+
 
 const MeetingCompanion = ({ onClose }) => {
   // State for UI
@@ -168,10 +170,6 @@ function fitCameraToModel(camera, model) {
     animateCameraToPosition(camera, targetPosition, 0.3);
   }, [isExpanded, isSidebarOpen]);
   
-  
-
-
-
   function loadCompanionModel(companion, scene) {
     // Clone the base model
     const model = createHollowKnight().clone();
@@ -210,12 +208,8 @@ function fitCameraToModel(camera, model) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   
-  
-  
-  
-
   // Mock data for transcript
-  //Future Proof Mock proper Participants data for each meeting ( Maybe through creating a new back-end API endpoint )
+  // Ryan Don't forget 
   let meetingParticipants;
   const meetingParticipantsTranscript = meeting?.participants.length === 2 ? (
     meeting.participants.map((participant) => participant.name)
@@ -324,13 +318,6 @@ fitCameraToModel(camera, model);
     controls.enablePan = false
     controls.rotateSpeed = 0.5
 
-    
-
-
-      
-    
-      
-
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate)
@@ -359,8 +346,6 @@ fitCameraToModel(camera, model);
       }
       */
         
-      
-
       controls.update()
       renderer.render(scene, camera)
     }
@@ -514,6 +499,7 @@ fitCameraToModel(camera, model);
   const getCompanionResponse = (userInput) => {
     const userInputLower = userInput.toLowerCase()
 
+// TODO: Here Include the Generated AI functionnalities
     if (userInputLower.includes("summary") || userInputLower.includes("summarize")) {
       return "Based on the meeting so far, the team is discussing user onboarding improvements. The main pain points are the payment information page and preference selection screens, which have high drop-off rates of approximately 23%."
     } else if (userInputLower.includes("action") || userInputLower.includes("task")) {
@@ -601,13 +587,16 @@ fitCameraToModel(camera, model);
           </div>
         </div>
 
+        {/* Action buttons */}
         <div className="flex items-center gap-2">
+          
           <button
             onClick={toggleListening}
             className={`p-2 rounded-full ${isListening ? "bg-red-500/20 text-red-500" : "bg-primary/20 text-primary"} hover:bg-opacity-30 transition-colors`}
           >
             {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
           </button>
+      
 
           {isListening && (
             <button
@@ -618,20 +607,18 @@ fitCameraToModel(camera, model);
             </button>
           )}
 
-<button
-  onClick={toggleExpand}
-  className="p-2 rounded-full bg-white/5 text-white/80 hover:bg-white/10 transition-colors"
->
-  {isExpanded ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-</button>
-
-
           <button
-            onClick={onClose}
+          onClick={toggleExpand}
+          className="p-2 rounded-full bg-white/5 text-white/80 hover:bg-white/10 transition-colors"
+          >
+            {isExpanded ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+          </button>
+
+          <Link to="/calendar" // TODO: here add the logic to end the meeting and pause everything
             className="p-2 rounded-full bg-white/5 text-white/80 hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Link>
         </div>
       </div>
 
