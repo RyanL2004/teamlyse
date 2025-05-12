@@ -216,6 +216,7 @@ function fitCameraToModel(camera, model) {
 
   // Mock data for transcript
   //Future Proof Mock proper Participants data for each meeting ( Maybe through creating a new back-end API endpoint )
+  let meetingParticipants;
   const meetingParticipantsTranscript = meeting?.participants.length === 2 ? (
     meeting.participants.map((participant) => participant.name)
   ) : (meetingParticipants  = meeting.participants.map((participant) => participant.name).slice(0, 2));
@@ -257,7 +258,9 @@ function fitCameraToModel(camera, model) {
     { id: 3, type: `Questions`, prompt: "Provide current Questions addressed in the meeting", text:`The "Question" command tells ${meeting.companion.name} to provide with the most important questions that needs to be address from the ongoing meeting.`} ,
     { id: 4, type: `Answer`, prompt: "Provide an Answer to the last question asked", text: `The "Answer" command tells ${meeting.companion.name} to provide an answer to the last question asked.`},
   ]
+  
 
+  // TODO: For Scalability, move this into a reusable function component 
   // Initialize 3D scene
   useEffect(() => {
     if (!companionContainerRef.current) return
