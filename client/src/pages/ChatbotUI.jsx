@@ -4,24 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
-"use client"
-
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import * as THREE from "three"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import {
-  Mic,
-  MicOff,
-  PauseCircle,
-  MessageSquare,
-  FileText,
-  Bookmark,
-  ChevronRight,
-  ChevronLeft,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
   Mic,
   MicOff,
   PauseCircle,
@@ -489,7 +472,6 @@ fitCameraToModel(camera, model);
   // Handle sending a message
   const handleSendMessage = () => {
     if (!inputValue.trim()) return
-    if (!inputValue.trim()) return
 
     // Add user message
     const userMessage = {
@@ -500,17 +482,7 @@ fitCameraToModel(camera, model);
     }
     setMessages((prev) => [...prev, userMessage])
     setInputValue("")
-    // Add user message
-    const userMessage = {
-      id: Date.now(),
-      sender: "user",
-      text: inputValue,
-      timestamp: new Date(),
-    }
-    setMessages((prev) => [...prev, userMessage])
-    setInputValue("")
 
-    // Simulate companion response
     // Simulate companion response
     setTimeout(() => {
       const companionMessage = {
@@ -590,39 +562,7 @@ fitCameraToModel(camera, model);
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
             {selectedCompanion?.name?.charAt(0) || "C"}
-    <div
-      className={`fixed ${isExpanded ? "inset-0" : "bottom-4 right-4"} flex flex-col bg-black/5 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden shadow-2xl transition-all duration-300 ease-in-out z-50`}
-      style={{
-        width: isExpanded ? "100%" : isSidebarOpen ? "800px" : "400px",
-        height: isExpanded ? "100%" : "600px",
-      }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-black/20 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-            {selectedCompanion?.name?.charAt(0) || "C"}
           </div>
-          <div>
-            <h3 className="font-medium text-white">
-              {selectedCompanion?.name || "Companion"}
-              <span className="ml-2 text-xs px-2 py-0.5 bg-primary/20 text-primary rounded-full">AI Assistant</span>
-            </h3>
-            <div className="flex items-center text-xs text-white/60">
-              <Clock className="w-3 h-3 mr-1" />
-              <span>{formatTime(meetingDuration)}</span>
-              {isListening && !isPaused && (
-                <span className="ml-2 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-red-500 mr-1 animate-pulse"></span>
-                  Recording
-                </span>
-              )}
-              {isPaused && (
-                <span className="ml-2 flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-yellow-500 mr-1"></span>
-                  Paused
-                </span>
-              )}
           <div>
             <h3 className="font-medium text-white">
               {selectedCompanion?.name || "Companion"}
@@ -680,22 +620,6 @@ fitCameraToModel(camera, model);
             <X className="w-5 h-5" />
           </Link>
         </div>
-      </div>
-
-      {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* 3D Companion */}
-        <div
-          ref={companionContainerRef}
-          className={`relative ${isSidebarOpen ? "w-1/3" : "w-full"} h-full bg-gradient-to-b from-black/30 to-black/10 transition-all duration-300`}
-        >
-          {/* Toggle sidebar button */}
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/2 z-10 p-1 rounded-full bg-white/10 text-white/80 hover:bg-white/20 transition-colors"
-          >
-            {isSidebarOpen ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4 mr-5" />}
-          </button>
       </div>
 
       {/* Main content */}
@@ -923,17 +847,10 @@ fitCameraToModel(camera, model);
                 </div>
               </div>
             )}
-            )}
           </div>
-        )}
         )}
       </div>
     </div>
-  )
-}
-
-export default MeetingCompanion
-
   )
 }
 
