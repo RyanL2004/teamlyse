@@ -150,14 +150,12 @@ export function MeetingForm({ meeting, onCancel }) {
     endDate.setHours(endHours, endMinutes);
     const formattedEndDate = endDate.toISOString();
 
-
-    const participants = values.participants
-      ? values.participants.split(",").map((p) => p.trim())
-      : [];
+    const descriptionInput = values.description;
+    const participants = values.participants ? values.participants.split(",").map((p) => p.trim()) : [];
 
     const meetingData = {
       title: values.title,
-      description: values.description || "",
+      description: descriptionInput,
       date: formattedStartDate,
       endTime: formattedEndDate,
       location: values.location || "",

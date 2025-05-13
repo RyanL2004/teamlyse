@@ -29,17 +29,18 @@ export const createMeeting = async (req, res) => {
         console.log("Authentificated User:", req.user); // Check if User is autheticated
 
 
-        const { title, date, endTime, location, calendar, status, participants, companion } = req.body
+        const { title, description, date, endTime, location, calendar, status, participants, companion } = req.body
 
         if(!title || !date || !endTime || !calendar || !companion) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        //Validate Participants (ensuring they are Valid mongoDB objectIDs)
+        // Validate Participants (ensuring they are Valid mongoDB objectIDs)
         // const validParticipants = participants.filter(p => mongoose.Types.ObjectId.isValid(p));
 
         const meeting = new Meeting ({
             title,
+            description: description || "",  // AI Context provided instructions
             date: date ? new Date(date).toISOString() : new Date().toISOString(),  // ✅ Ensure valid date
             endTime: endTime ? new Date(endTime).toISOString() : new Date(date).toISOString(),
             location: location || "Remote", // Optional
