@@ -75,6 +75,9 @@ export const updateMeeting = async ( req, res ) => {
         if (!meeting) {
             return res.status(404).json({ error: "Meeting not found" });
         }
+        if (!updateData.companion) {
+            return res.status(400).json({ message: "Companion is required for update"});
+        }
         res.status(200).json(meeting);
     }
     catch (error) {
