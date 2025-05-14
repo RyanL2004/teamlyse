@@ -6,7 +6,7 @@ const meetingSchema = new mongoose.Schema({
     description: { type: String, default: "" }, // Meeting-specific Instructions to the companion 
     date: { type: Date, required: true },   // Renamed from scheduledTime
     endTime: { type: Date, required: true }, // created seperate field for meeting end time 
-    location: { type: String, default: ""},
+    location: { type: String, default: "" }, // Location of the meeting
     calendar: { type: String, required: true},  // The calendar the meetings will belong to 
     status: { type: String, default: "upcoming"}, // Feat others statuses: upcoming, completed etc 
     participants: [{ type: String }],        // [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

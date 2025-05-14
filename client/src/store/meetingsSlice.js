@@ -6,14 +6,17 @@ import {
      deleteMeeting as deleteMeetingAPI,
      } from '@/api/meetings';
 
+// State for Fetch create a new meeting 
+export const createMeeting = createAsyncThunk(
+    'meeting/create',
+    async (meetingData, thunkAPI) => {
+        console.log ("2 Meeting Data Passed to Redux:", meetingData); // Debugging
+        try{ 
+            const response = await createMeetingAPI(meetingData);
+            console.log("Meeting Passed to Redux:", response); // Debugging  Cathed the error here 
 
-     // State for Fetch upcoming meetings 
-export const fetchUpcomingMeetings = createAsyncThunk(
-    'meetings/fetchUpcoming',
-    async (_, thunkAPI) => {
-        try {
-            const data = await fetchMeetingsAPI();
-            return data;
+            //response.meeting should contain the new meeting and its data 
+            return response.meeting
         }
         catch (error) {
             return thunkAPI.rejectWithValue(error.message);
@@ -21,15 +24,13 @@ export const fetchUpcomingMeetings = createAsyncThunk(
     }
 );
 
-// State for Fetch create a new meeting 
-export const createMeeting = createAsyncThunk(
-    'meeting/create',
-    async (meetingData, thunkAPI) => {
-        try{ 
-            const response = await createMeetingAPI(meetingData);
-
-            //response.meeting should contain the new meeting and its data 
-            return response.meeting
+// State for Fetch upcoming meetings 
+export const fetchUpcomingMeetings = createAsyncThunk(
+    'meetings/fetchUpcoming',
+    async (_, thunkAPI) => {
+        try {
+            const data = await fetchMeetingsAPI();
+            return data;
         }
         catch (error) {
             return thunkAPI.rejectWithValue(error.message);

@@ -27,10 +27,21 @@ export const signup = async (req, res) => {
     const newUser = new User({ name, email, password });
     await newUser.save();
 
-    //Generate a Json web token for each registered user
+    // Generate a Json web token for each registered user
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
+
+    //Store user info in session 
+    req.session.userId = newUser._id;
+    req.session.user = {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email, 
+      profilePhoto: newUser.profilePhoto,
+      bio: newUser.bio,
+    };
+    
 
     res.status(201).json({
       message: "User created successfully!",
@@ -98,7 +109,7 @@ export const getProfile = (req, res) => {
   // req.user is attached by our Auth middleware
   try {
     if (!req.user) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "Unauthorized" }); 
     }
     // Fetch User data from db
     res.status(200).json(req.user);

@@ -19,8 +19,9 @@ export async function signUp (name, email, password) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Sign-up failded');
     }
-
+    console.log("User signed up successfully:", response);
     return response.json();  // Returns the user data if sign-up is successful
+    
 }
 
 // Function to fetch User sign in
