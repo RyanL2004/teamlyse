@@ -82,7 +82,7 @@ export function MeetingForm({ meeting, onCancel }) {
     navigate("/select-companion", {
     state: { from: "calendar",resumeForm: true }
   });
-}
+  }
 
   // Helper function to convert Date to HH:mm string
   const dateToTimeString = (date) => format(date, "HH:mm");
@@ -176,13 +176,16 @@ export function MeetingForm({ meeting, onCancel }) {
       );
     } else {
       // Dispatch the create action with the new meeting data
-      dispatch(createMeeting(meetingData)).then(() => {
-        dispatch(fetchUpcomingMeetings());
+      dispatch(createMeeting(meetingData)).unwrap().then(() => {
+            // meeting created & already in Redux -> no need to refetch
+      localStorage.removeItem("meetingFormDraft"); // remove drafted form
+      onCancel(); // Call onCancel prop to reset form/UI
+      })
+      .catch((error) => {
+        console.error("Meeting creation failed:", error);
       });
-    }
-    localStorage.removeItem("meetingFormDraft"); // remove drafted form
-    onCancel(); // Call onCancel prop to reset form/UI
-  }
+      };
+  };
 
   return (
     <Form {...form}>
